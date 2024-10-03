@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../App.css';  
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -11,7 +13,7 @@ function Login() {
         
         {/* Logo Placeholder */}
         <div className="absolute top-4 left-4">
-          <h1 className="text-4xl text-green-500 font-bold">GG</h1>
+          <h1 onClick={() => navigate('/home')} className="text-4xl text-green-500 font-bold">GG</h1>
         </div>
 
         {/* Login / Sign Up Tabs */}
