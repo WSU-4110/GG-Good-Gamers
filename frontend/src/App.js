@@ -4,7 +4,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import React, { useState } from 'react';
 
-function Login() {
+function App() {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
@@ -159,4 +159,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default App;
