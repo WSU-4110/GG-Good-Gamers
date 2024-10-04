@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css'; // FontAwesome for icons
 import '../App.css'; // Ensure global styles are included
+import { useAuth } from '../contexts/authContext';
 
 
 function Home() {
   const [activeMenu, setActiveMenu] = useState('home'); // State to manage active menu
+  const { currentUser } = useAuth();
+
+  useEffect(() => {
+    console.log(currentUser);
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
@@ -115,9 +121,10 @@ function Home() {
 
   {/* Profile Icon */}
   <img
-    src="https://via.placeholder.com/40"
+    src={currentUser?.photoURL}
     alt="User Profile"
     className="rounded-full cursor-pointer"
+    width={'40px'}
   />
 </div>
 
