@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 function Home() {
   const navigate = useNavigate();
   const [activeMenu, setActiveMenu] = useState("home"); // State to manage active menu
-  const { currentUser, userLoggedIn } = useAuth();
+  const { currentUser, userLoggedIn } = useAuth(); // Ensure userLoggedIn and currentUser are coming from useAuth
 
   const onSignOut = (e) => {
     setActiveMenu("logout");
@@ -19,9 +19,12 @@ function Home() {
   };
 
   useEffect(() => {
-    console.log(currentUser);
-    !userLoggedIn && navigate("/");
-  }, [userLoggedIn]);
+    // Log currentUser to check if photoURL is being fetched correctly
+    console.log(currentUser); 
+    if (!userLoggedIn) {
+      navigate("/");
+    }
+  }, [userLoggedIn, currentUser, navigate]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
@@ -102,12 +105,9 @@ function Home() {
       <main className="flex-1 p-8">
         {/* Content area */}
         <div className="bg-gray-800 p-6 rounded-lg mb-8">
-          <h2 className="text-2xl font-bold mb-2">
-            Check What Your Friends Up To!
-          </h2>
+          <h2 className="text-2xl font-bold mb-2">Check What Your Friends Up To!</h2>
           <p className="text-gray-400 mb-4">
-            Conveniently customize proactive web services for leveraged
-            aggregate content.
+            Conveniently customize proactive web services for leveraged aggregate content.
           </p>
           <div className="flex items-center space-x-4">
             <input
@@ -115,9 +115,7 @@ function Home() {
               placeholder="What's on your mind?"
               className="flex-1 px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
-            <button className="px-4 py-2 bg-purple-500 text-white rounded-lg">
-              Create
-            </button>
+            <button className="px-4 py-2 bg-purple-500 text-white rounded-lg">Create</button>
           </div>
         </div>
 
@@ -141,19 +139,22 @@ function Home() {
       <aside className="w-1/4 bg-gray-900 p-4 min-h-screen space-y-8">
         {/* Top-right section (on top of Suggested for You) */}
         <div className="flex justify-end mb-4 space-x-6">
-          {" "}
-          {/* Top-right section */}
-          {/* Notification Icon with shake effect on hover */}
+          {/* Notification Icon */}
           <i className="fas fa-bell text-3xl text-gray-400 hover:text-white cursor-pointer shake"></i>
           {/* Messages Icon */}
           <i className="fas fa-comments text-3xl text-gray-400 hover:text-white cursor-pointer"></i>
           {/* Profile Icon */}
-          <img
-            src={currentUser?.photoURL || "https://via.placeholder.com/40"}
-            alt="User Profile"
-            className="rounded-full cursor-pointer"
-            width={"40px"}
-          />
+          {currentUser ? (
+  <img
+    src={currentUser?.photoURL || "https://via.placeholder.com/40"}
+    alt="User Profile"
+    className="rounded-full cursor-pointer"
+    width={"40px"}
+  />
+) : (
+  <div>Loading...</div>
+)}
+
         </div>
 
         {/* Suggested for You */}
@@ -175,9 +176,7 @@ function Home() {
                   <p className="text-gray-400 text-sm">Super Active</p>
                 </div>
               </div>
-              <button className="bg-purple-500 px-3 py-1 rounded-lg">
-                Follow
-              </button>
+              <button className="bg-purple-500 px-3 py-1 rounded-lg">Follow</button>
             </div>
             <div className="flex justify-between items-center bg-gray-700 p-2 rounded-lg">
               <div className="flex items-center space-x-2">
@@ -191,9 +190,7 @@ function Home() {
                   <p className="text-gray-400 text-sm">Super Active</p>
                 </div>
               </div>
-              <button className="bg-purple-500 px-3 py-1 rounded-lg">
-                Follow
-              </button>
+              <button className="bg-purple-500 px-3 py-1 rounded-lg">Follow</button>
             </div>
             <div className="flex justify-between items-center bg-gray-700 p-2 rounded-lg">
               <div className="flex items-center space-x-2">
@@ -207,9 +204,7 @@ function Home() {
                   <p className="text-gray-400 text-sm">Super Active</p>
                 </div>
               </div>
-              <button className="bg-purple-500 px-3 py-1 rounded-lg">
-                Follow
-              </button>
+              <button className="bg-purple-500 px-3 py-1 rounded-lg">Follow</button>
             </div>
           </div>
         </div>
@@ -218,9 +213,7 @@ function Home() {
         <div className="bg-gray-800 p-6 rounded-lg">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-bold">Live Chat</h2>
-            <button className="bg-gray-700 px-2 py-1 rounded-lg">
-              Add Group
-            </button>
+            <button className="bg-gray-700 px-2 py-1 rounded-lg">Add Group</button>
           </div>
           <div className="space-y-4">
             <div className="flex justify-between items-center bg-gray-700 p-2 rounded-lg">
