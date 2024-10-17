@@ -4,6 +4,7 @@ import "../App.css"; // Ensure global styles are included
 import { useAuth } from "../contexts/authContext";
 import { doSignOut } from "../firebase/auth";
 import { useNavigate } from "react-router-dom";
+import Post from "../components/Post";
 
 function Home() {
   const navigate = useNavigate();
@@ -122,19 +123,10 @@ function Home() {
         </div>
 
         {/* Post */}
-        <div className="bg-gray-800 p-6 rounded-lg">
-          <h3 className="text-xl font-semibold">Abrar</h3>
-          <p className="text-gray-400">Public</p>
-          <div className="bg-gray-700 h-48 my-4 rounded-lg"></div>
-          <div className="flex justify-between items-center">
-            <div className="flex space-x-4">
-              <button className="bg-gray-700 p-2 rounded-lg">Like</button>
-              <button className="bg-gray-700 p-2 rounded-lg">Comment</button>
-              <button className="bg-gray-700 p-2 rounded-lg">Share</button>
-            </div>
-            <button className="bg-gray-700 p-2 rounded-lg">Give Stars</button>
-          </div>
-        </div>
+        <Post name={'Abrar'} />
+        <Post name={'Moe'} />
+        <Post name={'Ali'} />
+        <Post />
       </main>
 
       {/* Right Sidebar */}

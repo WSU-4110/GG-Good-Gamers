@@ -12,7 +12,7 @@ import {
 
 function Login() {
   const navigate = useNavigate();
-  const { userLoggedIn } = useAuth();
+  const { userLoggedIn, currentUser } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
