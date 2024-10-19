@@ -23,16 +23,30 @@ class User(models.Model):
     userDOB = models.DateField()
     userID = models.IntegerField(unique = True) #Primary Key
 
+    def __str__(self):
+        return self.screenName, self.userID
+
 class BlacklistedUser(models.Model):
     userID = models.IntegerField() #Primary Key
+
+    def __str__(self):
+        return self.userID
 
 class AdminUser(models.Model):
     userID = models.IntegerField() #Primary Key
 
-class postInteraction(models.Models):
+    def __str__(self):
+        return self.userID
+
+class PostInteraction(models.Models):
     userID = models.IntegerField() #Primary Key
     postID = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True)
     comments = models.CharField(max_length=500, blank=True, null=True)
     likeCount = models.IntegerField() 
     dislikeCount = models.IntegerField()
+
+    def __str__(self):
+        return self.postID, self.likeCount, self.dislikeCount
+    
+    # 7:35 part 1 CBI Analytics
