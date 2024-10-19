@@ -4,7 +4,7 @@ import "../App.css"; // Ensure global styles are included
 import { useAuth } from "../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 import Post from "../components/Post";
-import lsidebar from "../components/lsidebar";
+import Lsidebar from "../components/lsidebar";
 
 function Home() {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ function Home() {
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
       {/* Left Sidebar */}
-      <lsidebar UGI={userLoggedIn} />
+      <Lsidebar UGI={userLoggedIn} />
 
       {/* Main Content */}
       <main className="flex-1 p-8">
@@ -45,9 +45,9 @@ function Home() {
         </div>
 
         {/* Post */}
-        <Post name={'Abrar'} />
-        <Post name={'Moe'} />
-        <Post name={'Ali'} />
+        <Post name={"Abrar"} />
+        <Post name={"Moe"} />
+        <Post name={"Ali"} />
         <Post />
       </main>
 
