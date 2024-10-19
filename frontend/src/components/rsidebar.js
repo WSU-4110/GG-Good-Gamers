@@ -12,13 +12,18 @@ export default function Rsidebar ({ currentuser }){
           {/* Messages Icon */}
           <i className="fas fa-comments text-3xl text-gray-400 hover:text-white cursor-pointer"></i>
           {/* Profile Icon */}
-          <img
-            src={currentuser?.photoURL || "https://via.placeholder.com/40"}
-            alt="User Profile"
-            className="rounded-full cursor-pointer"
-            width={"40px"}
-          />
+          <div className="flex flex-col items-center justify-center">
+            <img
+              referrerPolicy="no-referrer"
+              src={currentuser?.photoURL || "https://via.placeholder.com/40"}
+              alt="User Profile"
+              className="rounded-full cursor-pointer"
+              width={"40px"}
+            />
+            <p className="mt-2">{currentuser?.displayName}</p>
+          </div>
         </div>
+
         {/* Suggested for You */}
         <div className="bg-gray-800 p-6 rounded-lg mt-8">
           <div className="flex justify-between items-center mb-4">
