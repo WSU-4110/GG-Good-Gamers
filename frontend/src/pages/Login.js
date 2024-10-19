@@ -59,12 +59,7 @@ function Login() {
         {/* Removed shadow */}
         {/* Logo Placeholder */}
         <div className="absolute top-4 left-4">
-          <h1
-            onClick={() => navigate("/home")}
-            className="text-4xl text-green-500 font-bold"
-          >
-            GG
-          </h1>
+          <h1 className="text-4xl text-green-500 font-bold">GG</h1>
         </div>
         {/* Login / Sign Up Tabs */}
         <div className="flex justify-between mb-8 mt-12">
