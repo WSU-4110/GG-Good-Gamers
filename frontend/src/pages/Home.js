@@ -123,9 +123,9 @@ function Home() {
         </div>
 
         {/* Post */}
-        <Post name={'Abrar'} />
-        <Post name={'Moe'} />
-        <Post name={'Ali'} />
+        <Post name={"Abrar"} />
+        <Post name={"Moe"} />
+        <Post name={"Ali"} />
         <Post />
       </main>
 
@@ -140,12 +140,16 @@ function Home() {
           {/* Messages Icon */}
           <i className="fas fa-comments text-3xl text-gray-400 hover:text-white cursor-pointer"></i>
           {/* Profile Icon */}
-          <img
-            src={currentUser?.photoURL || "https://via.placeholder.com/40"}
-            alt="User Profile"
-            className="rounded-full cursor-pointer"
-            width={"40px"}
-          />
+          <div className="flex flex-col items-center justify-center">
+            <img
+              referrerPolicy="no-referrer"
+              src={currentUser?.photoURL || "https://via.placeholder.com/40"}
+              alt="User Profile"
+              className="rounded-full cursor-pointer"
+              width={"40px"}
+            />
+            <p className="mt-2">{currentUser?.displayName}</p>
+          </div>
         </div>
 
         {/* Suggested for You */}
