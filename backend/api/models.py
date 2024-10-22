@@ -38,7 +38,7 @@ class AdminUser(models.Model):
     def __str__(self):
         return self.userID
 
-class PostInteraction(models.Models):
+class PostInteraction(models.Model):
     userID = models.IntegerField() #Primary Key
     postID = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True)
@@ -49,4 +49,4 @@ class PostInteraction(models.Models):
     def __str__(self):
         return self.postID, self.likeCount, self.dislikeCount
     
-    # 7:35 part 1 CBI Analytics
+    # 7:35 part 5 CBI Analytics
