@@ -14,53 +14,71 @@ class Project(models.Model):
     def __str__(self):
         return self.name
     
+
+
 class UserID(models.Model):
     id = models.IntegerField(unique = True, default = (random.randint(0,9999999)), primary_key = True)
+    userEmail = models.EmailField(unique = True, max_length = 99) 
     class Meta:
         abstract = True
         ordering = ['id']
-        db_table = "User ID Number"
+    def __str__(self):
+        return self.id, self.userEmail
 
-class User(models.Model):
+class User(UserID):
     #here is where we add attributes for users
-    #rand = User.objects.make_random_password(length = 20, allowedC)
     screenName = models.CharField(unique = True, max_length = 20) 
-    userEmail = models.EmailField(unique = True, max_length = 64) 
-    userName = models.CharField(max_length = 30) 
+    userName = models.CharField() 
     userPassword = models.CharField(max_length=25)
     userGender = models.IntegerField() # 0 = male, 1 = female
     userDOB = models.DateField()
-    userID = models.IntegerField(unique = True, primary_key = True) #Primary Key
-    doc = models.DateTimeField(auto_now_add=True)
-
+    docAcct = models.DateTimeField(auto_now_add=True)
     def __str__(self):
-        return self.screenName, self.userID
+        return self.id, self.screenName
     
-    
-    
-
-class BlacklistedUser(models.Model):
-    userID = models.IntegerField(unique = True) #Primary Key
-
+class BlacklistedUser(User):
     def __str__(self):
-        return self.userID
-
-class AdminUser(models.Model):
-    userID = models.IntegerField(unique = True) #Primary Key
-
+        return self.id, self.userEmail
+    
+class AdminUser(User):
     def __str__(self):
-        return self.userID
+        return self.id, self.userEmail
 
-class PostInteraction(models.Model):
-    userID = models.IntegerField(unique = True) #Primary Key
-    postID = models.IntegerField(unique = True, max_length = 64)
+class PostInteraction(UserID):
+    postID = models.IntegerField(unique = True, default = (random.randint(0,9999999)))
     created = models.DateTimeField(auto_now_add=True)
     comments = models.CharField(max_length=500, blank=True, null=True)
     likeCount = models.IntegerField() 
     dislikeCount = models.IntegerField()
-    doc = models.DateTimeField(auto_now_add=True)
-
+    docPost = models.DateTimeField(auto_now_add=True)
     def __str__(self):
-        return self.postID, self.likeCount, self.dislikeCount
+        return self.id, self.postID, self.likeCount, self.dislikeCount
     
-    # 7:35 part 5 CBI Analytics
+
+#class BlacklistedUser(models.Model):
+#    id = models.IntegerField(unique = True) #Primary Key
+#    y = models.CharField(max_length = 250)
+#    class Meta:
+#        ordering = ['id']
+#        db_table = "Banned Users"
+#    def __str__(self):
+#        return self.id, self.y
+
+#class AdminUser(models.Model):
+#    id = models.IntegerField(unique = True) #Primary Key
+#
+#    def __str__(self):
+#        return self.id
+
+#class PostInteraction(models.Model):
+#    postID = models.IntegerField(unique = True, max_length = 64)
+#    created = models.DateTimeField(auto_now_add=True)
+#    comments = models.CharField(max_length=500, blank=True, null=True)
+#    likeCount = models.IntegerField() 
+#    dislikeCount = models.IntegerField()
+#    doc = models.DateTimeField(auto_now_add=True)
+#
+#    def __str__(self):
+#        return self.postID, self.likeCount, self.dislikeCount
+#    
+#    # 7:35 part 5 CBI Analytics
