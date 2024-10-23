@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
-import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome for icons
-import "../App.css"; // Ensure global styles are included
+import "@fortawesome/fontawesome-free/css/all.min.css"; 
+import "../App.css"; 
 import { useAuth } from "../contexts/authContext";
 import { doSignOut } from "../firebase/auth";
 import { useNavigate } from "react-router-dom";
+import Post from "../components/Post";
+import CreatePostModal from "../components/CreatePostModal"; // Import the modal for creating posts
+import { IconButton, Box, Modal } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 function Home() {
   const navigate = useNavigate();
-  const [activeMenu, setActiveMenu] = useState("home"); // State to manage active menu
-  const { currentUser, userLoggedIn } = useAuth(); // Ensure userLoggedIn and currentUser are coming from useAuth
+  const [activeMenu, setActiveMenu] = useState("home"); 
+  const { currentUser, userLoggedIn } = useAuth();
+  const [posts, setPosts] = useState([]); // State to hold posts
+  const [openModal, setOpenModal] = useState(false); // Modal visibility state
 
   const onSignOut = (e) => {
     setActiveMenu("logout");
@@ -19,12 +25,15 @@ function Home() {
   };
 
   useEffect(() => {
-    // Log currentUser to check if photoURL is being fetched correctly
-    console.log(currentUser); 
     if (!userLoggedIn) {
       navigate("/");
     }
   }, [userLoggedIn, currentUser, navigate]);
+
+  // Function to handle post creation
+  const handleCreatePost = (newPost) => {
+    setPosts([newPost, ...posts]); // Add new post to top of list
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
@@ -39,9 +48,7 @@ function Home() {
         <nav className="flex flex-col space-y-6">
           <div
             className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
-              activeMenu === "home"
-                ? "bg-gray-700 text-purple-500"
-                : "text-gray-400"
+              activeMenu === "home" ? "bg-gray-700 text-purple-500" : "text-gray-400"
             }`}
             onClick={() => setActiveMenu("home")}
           >
@@ -49,9 +56,7 @@ function Home() {
           </div>
           <div
             className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
-              activeMenu === "explore"
-                ? "bg-gray-700 text-purple-500"
-                : "text-gray-400"
+              activeMenu === "explore" ? "bg-gray-700 text-purple-500" : "text-gray-400"
             }`}
             onClick={() => setActiveMenu("explore")}
           >
@@ -59,9 +64,7 @@ function Home() {
           </div>
           <div
             className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
-              activeMenu === "lounge"
-                ? "bg-gray-700 text-purple-500"
-                : "text-gray-400"
+              activeMenu === "lounge" ? "bg-gray-700 text-purple-500" : "text-gray-400"
             }`}
             onClick={() => setActiveMenu("lounge")}
           >
@@ -69,9 +72,7 @@ function Home() {
           </div>
           <div
             className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
-              activeMenu === "friends"
-                ? "bg-gray-700 text-purple-500"
-                : "text-gray-400"
+              activeMenu === "friends" ? "bg-gray-700 text-purple-500" : "text-gray-400"
             }`}
             onClick={() => setActiveMenu("friends")}
           >
@@ -80,9 +81,7 @@ function Home() {
           <hr className="border-gray-600 my-4 w-full" />
           <div
             className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
-              activeMenu === "settings"
-                ? "bg-gray-700 text-purple-500"
-                : "text-gray-400"
+              activeMenu === "settings" ? "bg-gray-700 text-purple-500" : "text-gray-400"
             }`}
             onClick={() => setActiveMenu("settings")}
           >
@@ -90,9 +89,7 @@ function Home() {
           </div>
           <div
             className={`p-3 mt-auto rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
-              activeMenu === "logout"
-                ? "bg-gray-700 text-purple-500"
-                : "text-gray-400"
+              activeMenu === "logout" ? "bg-gray-700 text-purple-500" : "text-gray-400"
             }`}
             onClick={onSignOut}
           >
@@ -103,59 +100,52 @@ function Home() {
 
       {/* Main Content */}
       <main className="flex-1 p-8">
-        {/* Content area */}
-        <div className="bg-gray-800 p-6 rounded-lg mb-8">
-          <h2 className="text-2xl font-bold mb-2">Check What Your Friends Up To!</h2>
-          <p className="text-gray-400 mb-4">
-            Conveniently customize proactive web services for leveraged aggregate content.
-          </p>
-          <div className="flex items-center space-x-4">
-            <input
-              type="text"
-              placeholder="What's on your mind?"
-              className="flex-1 px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-            <button className="px-4 py-2 bg-purple-500 text-white rounded-lg">Create</button>
-          </div>
-        </div>
-
-        {/* Post */}
-        <div className="bg-gray-800 p-6 rounded-lg">
-          <h3 className="text-xl font-semibold">Abrar</h3>
-          <p className="text-gray-400">Public</p>
-          <div className="bg-gray-700 h-48 my-4 rounded-lg"></div>
-          <div className="flex justify-between items-center">
-            <div className="flex space-x-4">
-              <button className="bg-gray-700 p-2 rounded-lg">Like</button>
-              <button className="bg-gray-700 p-2 rounded-lg">Comment</button>
-              <button className="bg-gray-700 p-2 rounded-lg">Share</button>
-            </div>
-            <button className="bg-gray-700 p-2 rounded-lg">Give Stars</button>
-          </div>
-        </div>
+        {/* Display Posts */}
+        {posts.map((post, index) => (
+          <Post
+            key={index}
+            name={post.name}
+            image={post.image}
+            text={post.text}
+            profilePicture={currentUser?.photoURL} // Pass profile picture
+          />
+        ))}
       </main>
 
       {/* Right Sidebar */}
       <aside className="w-1/4 bg-gray-900 p-4 min-h-screen space-y-8">
-        {/* Top-right section (on top of Suggested for You) */}
-        <div className="flex justify-end mb-4 space-x-6">
-          {/* Notification Icon */}
-          <i className="fas fa-bell text-3xl text-gray-400 hover:text-white cursor-pointer shake"></i>
-          {/* Messages Icon */}
-          <i className="fas fa-comments text-3xl text-gray-400 hover:text-white cursor-pointer"></i>
-          {/* Profile Icon */}
-          {currentUser ? (
-  <img
-    src={currentUser?.photoURL || "https://via.placeholder.com/40"}
-    alt="User Profile"
-    className="rounded-full cursor-pointer"
-    width={"40px"}
-  />
-) : (
-  <div>Loading...</div>
-)}
+        {/* Top-right section */}
+<div className="flex justify-end mb-4 space-x-6 items-center">
+  {/* Notification Icon with shake effect */}
+  <i className="fas fa-bell text-3xl text-gray-400 hover:text-white cursor-pointer shake"></i>
 
-        </div>
+  {/* Message Icon */}
+  <IconButton sx={{ color: "rgb(156, 163, 175)" }}> {/* Same color for all */}
+    <i className="fas fa-comments"></i>
+  </IconButton>
+
+  {/* + Button for creating a post */}
+  <IconButton 
+    onClick={() => setOpenModal(true)} 
+    sx={{ color: "rgb(156, 163, 175)" }} // Applies the same color as the other icons
+  >
+    <AddIcon fontSize="large" />
+  </IconButton>
+
+  {/* User Profile */}
+  {currentUser ? (
+    <img
+      src={currentUser?.photoURL || "https://via.placeholder.com/40"}
+      alt="User Profile"
+      className="rounded-full cursor-pointer"
+      width={"40px"}
+    />
+  ) : (
+    <div>Loading...</div>
+  )}
+</div>
+
+
 
         {/* Suggested for You */}
         <div className="bg-gray-800 p-6 rounded-lg mt-8">
@@ -227,6 +217,14 @@ function Home() {
           </div>
         </div>
       </aside>
+
+      {/* Create Post Modal */}
+      <CreatePostModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        onCreatePost={handleCreatePost}
+        userName={currentUser?.displayName || "User"} // Pass user's name
+      />
     </div>
   );
 }
