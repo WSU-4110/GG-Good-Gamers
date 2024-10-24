@@ -47,6 +47,18 @@ function Login() {
       setIsRegistering(true);
       await doCreateUserWithEmailAndPassword(email, password);
     }
+    // AxiosInstance.post('user/',{
+    //   id = 
+    //   userEmail = 
+    //   screenName = 
+    //   userName =
+    //   userPassword = 
+    //   userGender = 
+    //   userDOB = 
+    //   docAcct = 
+    //   isAdmin = 
+    //   isBanned =
+    // }
   };
 
   useEffect(() => {
