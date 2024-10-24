@@ -17,7 +17,7 @@ class Project(models.Model):
 
 
 class UserID(models.Model):
-    id = models.IntegerField(unique = True, default = (random.randint(0,9999999)), primary_key = True)
+    id = models.IntegerField(unique = True, default = (random.randint(0,9999999999)), primary_key = True)
     userEmail = models.EmailField(unique = True, max_length = 99, null = True) 
     class Meta:
         abstract = True
@@ -25,22 +25,22 @@ class UserID(models.Model):
     def __str__(self):
         return self.id, self.userEmail
 
-class User(UserID, default = 0):
+class User(UserID):
     #here is where we add attributes for users
-    screenName = models.CharField(unique = True, max_length = 20) 
-    userName = models.CharField(max_length = 25) 
-    userPassword = models.CharField(max_length = 25)
+    screenName = models.CharField(unique = True, max_length = 20, default = (random.randint(0,9999999))) 
+    userName = models.CharField(max_length = 25, null = True) 
+    userPassword = models.CharField(max_length = 25, null = True)
     userGender = models.IntegerField(null = True) # 0 = male, 1 = female
     userDOB = models.DateField(null = True)
     docAcct = models.DateTimeField(auto_now_add = True)
     def __str__(self):
         return self.id, self.screenName
     
-class BlacklistedUser(User):
+class BlacklistedUser(UserID):
     def __str__(self):
         return self.id, self.userEmail
     
-class AdminUser(User):
+class AdminUser(UserID):
     def __str__(self):
         return self.id, self.userEmail
 
