@@ -25,7 +25,7 @@ class UserID(models.Model):
     def __str__(self):
         return self.id, self.userEmail
 
-class User(UserID):
+class User(UserID, default = 0):
     #here is where we add attributes for users
     screenName = models.CharField(unique = True, max_length = 20) 
     userName = models.CharField(max_length = 25) 
