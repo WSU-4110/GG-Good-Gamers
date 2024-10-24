@@ -18,7 +18,7 @@ class Project(models.Model):
 
 class UserID(models.Model):
     id = models.IntegerField(unique = True, default = (random.randint(0,9999999)), primary_key = True)
-    userEmail = models.EmailField(unique = True, max_length = 99) 
+    userEmail = models.EmailField(unique = True, max_length = 99, null = True) 
     class Meta:
         abstract = True
         ordering = ['id']
@@ -30,9 +30,9 @@ class User(UserID):
     screenName = models.CharField(unique = True, max_length = 20) 
     userName = models.CharField(max_length = 25) 
     userPassword = models.CharField(max_length = 25)
-    userGender = models.IntegerField() # 0 = male, 1 = female
-    userDOB = models.DateField()
-    docAcct = models.DateTimeField(auto_now_add=True)
+    userGender = models.IntegerField(null = True) # 0 = male, 1 = female
+    userDOB = models.DateField(null = True)
+    docAcct = models.DateTimeField(auto_now_add = True)
     def __str__(self):
         return self.id, self.screenName
     
@@ -46,11 +46,11 @@ class AdminUser(User):
 
 class PostInteraction(UserID):
     postID = models.IntegerField(unique = True, default = (random.randint(0,9999999)))
-    created = models.DateTimeField(auto_now_add=True)
-    comments = models.CharField(max_length=500, blank=True, null=True)
-    likeCount = models.IntegerField() 
-    dislikeCount = models.IntegerField()
-    docPost = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add = True)
+    comments = models.CharField(max_length = 500, blank = True, null = True)
+    likeCount = models.IntegerField(null = True) 
+    dislikeCount = models.IntegerField(null = True)
+    docPost = models.DateTimeField(auto_now_add = True)
     def __str__(self):
         return self.id, self.postID, self.likeCount, self.dislikeCount
     
