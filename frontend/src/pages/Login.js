@@ -16,6 +16,12 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [dobDay, setDobDay] = useState();
+  const [dobMonth, setDobMonth] = useState();
+  const [dobYear, setDobYear] = useState();
+  const [gender, setGender] = useState();
+
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -51,6 +57,10 @@ function Login() {
   useEffect(() => {
     userLoggedIn && navigate("/home");
   }, [userLoggedIn]);
+
+  useEffect(() => {
+    console.log(password);
+  }, [password]);
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -148,6 +158,9 @@ function Login() {
                 type="text"
                 placeholder="Please Enter your Username"
                 className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
               />
               <div className="absolute left-3 top-3 text-gray-400">
                 <i className="fas fa-user"></i> {/* User Icon */}
@@ -160,6 +173,9 @@ function Login() {
                 type="email"
                 placeholder="Please Enter your Email"
                 className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
               />
               <div className="absolute left-3 top-3 text-gray-400">
                 <i className="fas fa-envelope"></i> {/* Email Icon */}
@@ -172,6 +188,9 @@ function Login() {
                 type="password"
                 placeholder="Please Enter your Password"
                 className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
               />
               <div className="absolute left-3 top-3 text-gray-400">
                 <i className="fas fa-lock"></i> {/* Password Icon */}
@@ -187,7 +206,11 @@ function Login() {
                     Day
                   </option>
                   {Array.from({ length: 31 }, (_, i) => (
-                    <option key={i + 1} value={i + 1}>
+                    <option
+                      key={i + 1}
+                      value={i + 1}
+                      onClick={setDobDay(i + 1)}
+                    >
                       {i + 1}
                     </option>
                   ))}
@@ -210,7 +233,7 @@ function Login() {
                     "November",
                     "December",
                   ].map((month, i) => (
-                    <option key={i} value={month}>
+                    <option key={i} value={month} onClick={setDobMonth(i + 1)}>
                       {month}
                     </option>
                   ))}
@@ -220,7 +243,11 @@ function Login() {
                     Year
                   </option>
                   {Array.from({ length: 100 }, (_, i) => (
-                    <option key={i} value={2024 - i}>
+                    <option
+                      key={i}
+                      value={2024 - i}
+                      onClick={setDobYear(2024 - i)}
+                    >
                       {2024 - i}
                     </option>
                   ))}
@@ -234,8 +261,8 @@ function Login() {
                 <option value="" disabled selected>
                   Select your Gender
                 </option>
-                <option>Male</option>
-                <option>Female</option>
+                <option onClick={setGender(0)}>Male</option>
+                <option onClick={setGender(1)}>Female</option>
               </select>
               <div className="absolute left-3 top-3 text-gray-400">
                 <i className="fas fa-venus-mars"></i> {/* Gender Icon */}
@@ -243,7 +270,10 @@ function Login() {
             </div>
 
             <div className="mb-6">
-              <button className="w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg">
+              <button
+                className="w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg"
+                onClick={onSignUp}
+              >
                 Sign Up
               </button>
             </div>
