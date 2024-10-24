@@ -76,9 +76,10 @@ class User(models.Model):
     userPassword = models.CharField(max_length = 25, null = True)
     userGender = models.IntegerField(null = True) # 0 = male, 1 = female
     userDOB = models.DateField(null = True)
-    docAcct = models.DateTimeField(auto_now_add = True)
-    isAdmin = models.BooleanField(default = False)
-    isBanned = models.BooleanField(default = False)
+    # docAcct = models.DateTimeField(auto_now_add = True)
+    # isAdmin = models.BooleanField(default = False)
+    # isBanned = models.BooleanField(default = False)
+
     def __str__(self):
         return self.userEmail, self.screenName
     
