@@ -1,9 +1,10 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./pages/Login"; 
-import Home from "./pages/Home"; 
-import "./App.css"; 
-import { AuthProvider, useAuth } from "./contexts/authContext";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './pages/Login';
+import Home from './pages/Home';
+import Lounge from './pages/Lounge';
+import { AuthProvider } from './contexts/authContext';
+import './App.css';
 
 function App() {
   return (
@@ -11,11 +12,9 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
-            {/* Route for Login Page */}
             <Route path="/" element={<Login />} />
-
-            {/* Route for Home Page */}
             <Route path="/home" element={<Home />} />
+            <Route path="/lounge" element={<Lounge />} />
           </Routes>
         </div>
       </Router>

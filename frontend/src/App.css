@@ -30,3 +30,15 @@ button:hover {
 .shake:hover {
   animation: shake 0.5s ease-in-out;
 }
+
+
+input[type="text"] {
+  height: 2.5rem; /* Ensures input height matches the button */
+}
+
+button {
+  height: 2.5rem; /* Matches input height */
+  display: flex;
+  align-items: center; /* Centers text vertically */
+  justify-content: center; /* Centers text horizontally */
+}
