@@ -18,7 +18,7 @@ class Project(models.Model):
 
 class UserID(models.Model):
     id = models.IntegerField(unique = True, default = (random.randint(0,9999999999)), primary_key = True)
-    userEmail = models.EmailField(unique = True, max_length = 99, null = True) 
+    userEmail = models.EmailField(max_length = 99, null = True) 
     class Meta:
         abstract = True
         ordering = ['id']
