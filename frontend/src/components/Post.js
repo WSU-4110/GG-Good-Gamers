@@ -40,16 +40,24 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
       {/* Name and Profile Picture */}
       <div className="flex items-center mb-4">
         <img
-          src={profilePicture || "https://via.placeholder.com/40"} // Use profile picture or placeholder
+          src={profilePicture || 'https://via.placeholder.com/40'} // Use profile picture or placeholder
           alt="Profile"
           className="rounded-full mr-4"
-          width={"40px"}
+          width="40"
         />
         <h3 className="text-xl font-semibold">{name}</h3>
       </div>
 
-      {/* Image */}
-      {image && <img src={image} alt="Uploaded" className="my-4 rounded-lg" />}
+      {/* Image with improved styling */}
+      {image && (
+        <div className="w-full h-72 bg-gray-700 rounded-lg overflow-hidden my-4">
+          <img
+            src={image}
+            alt="Uploaded"
+            className="w-full h-full object-contain"
+          />
+        </div>
+      )}
 
       {/* Post Text with username before caption */}
       <div className="text-left mb-2">
@@ -61,19 +69,22 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
       {/* Icons (Like, Comment, Share, Bookmark) */}
       <div className="flex justify-between items-center mt-4">
         <div className="flex space-x-4">
-          <IconButton onClick={handleLikeClick} sx={{ color: liked ? "#9b5de5" : "white" }}>
+          <IconButton onClick={handleLikeClick} sx={{ color: liked ? '#9b5de5' : 'white' }}>
             {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
           </IconButton>
-          <IconButton onClick={() => setCommentVisible(!commentVisible)} sx={{ color: "white" }}>
+          <IconButton
+            onClick={() => setCommentVisible(!commentVisible)}
+            sx={{ color: 'white' }}
+          >
             <CommentIcon />
           </IconButton>
-          <IconButton sx={{ color: "white" }}>
+          <IconButton sx={{ color: 'white' }}>
             <ShareIcon />
           </IconButton>
         </div>
 
         {/* Favorite Button aligned to the right */}
-        <IconButton onClick={handleFavoriteClick} sx={{ color: favorited ? "#9b5de5" : "white" }}>
+        <IconButton onClick={handleFavoriteClick} sx={{ color: favorited ? '#9b5de5' : 'white' }}>
           {favorited ? <BookmarkIcon /> : <BookmarkBorderIcon />}
         </IconButton>
       </div>
@@ -98,12 +109,12 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
               placeholder="Post a comment..."
               className="flex-1 px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none"
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === 'Enter') {
                   handleSendComment();
                 }
               }}
             />
-            <IconButton onClick={handleSendComment} sx={{ color: "white" }}>
+            <IconButton onClick={handleSendComment} sx={{ color: 'white' }}>
               <SendIcon />
             </IconButton>
           </div>
