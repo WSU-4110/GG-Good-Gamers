@@ -28,8 +28,8 @@ class UserID(models.Model):
 class User(UserID):
     #here is where we add attributes for users
     screenName = models.CharField(unique = True, max_length = 20) 
-    userName = models.CharField() 
-    userPassword = models.CharField(max_length=25)
+    userName = models.CharField(max_length = 25) 
+    userPassword = models.CharField(max_length = 25)
     userGender = models.IntegerField() # 0 = male, 1 = female
     userDOB = models.DateField()
     docAcct = models.DateTimeField(auto_now_add=True)
