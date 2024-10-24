@@ -9,6 +9,7 @@ import {
   doSignInWithEmailAndPassword,
   doSignInWithGoogle,
 } from "../firebase/auth";
+import AxiosInstance from "../components/Axios";
 
 function Login() {
   const navigate = useNavigate();
