@@ -26,6 +26,8 @@ class User(models.Model):
     docAcct = models.DateTimeField(auto_now_add = True)
     isAdmin = models.BooleanField(default = False)
     isBanned = models.BooleanField(default = False)
+    class Meta:
+        ordering = ['docAcct']
 
     def __str__(self):
         return self.userEmail
@@ -37,7 +39,9 @@ class Post(models.Model):
    comments = models.CharField(max_length=500, blank=True, null=True)
    likeCount = models.IntegerField(default = 0) 
    dislikeCount = models.IntegerField(default = 0)
-   docPost = models.DateTimeField(auto_now_add=True)
+   #postURL = models.ImageField(upload_to = "uploads/")
+   class Meta:
+        ordering = ['created']
 
    def __str__(self):
        return str(self.postID)
