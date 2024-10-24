@@ -41,7 +41,7 @@ class Post(models.Model):
    dislikeCount = models.IntegerField(default = 0)
    #postURL = models.ImageField(upload_to = "uploads/")
    class Meta:
-        ordering = ['created']
+        ordering = ['user']
 
    def __str__(self):
        return str(self.postID)

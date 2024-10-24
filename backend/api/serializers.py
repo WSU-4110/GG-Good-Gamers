@@ -12,9 +12,10 @@ class UsersSerializer(serializers.ModelSerializer):
         fields = ('id', 'userEmail', 'userName', 'screenName', 'userPassword', 'userGender', 'userDOB', 'docAcct', 'isAdmin', 'isBanned')
 
 class PostSerializer(serializers.ModelSerializer):
+    user_serial = serializers.RelatedField(source = 'user', read_only = True)
     class Meta:
-        model = User
-        fields = ('user', 'postID', 'created', 'comments', 'likeCount', 'dislikeCount', )
+        model = Post
+        fields = ('user_serial', 'postID', 'created', 'comments', 'likeCount', 'dislikeCount', )
 
 
 
