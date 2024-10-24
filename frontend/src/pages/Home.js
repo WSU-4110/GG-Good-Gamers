@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import Post from "../components/Post";
 import Lsidebar from "../components/lsidebar";
 import Rsidebar  from "../components/rsidebar";
+import AxiosInstance from "../components/Axios";
+
 function Home() {
   const navigate = useNavigate();
   const [activeMenu, setActiveMenu] = useState("home"); // State to manage active menu
