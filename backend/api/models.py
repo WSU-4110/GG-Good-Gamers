@@ -2,17 +2,28 @@ from django.db import models
 import random
 # Create your models here.
 
-class Project(models.Model):
-    name = models.CharField(unique=True, max_length=100)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    comments = models.CharField(max_length=500, blank=True, null=True)
-    status = models.CharField(max_length=100)
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
+class UserFactory:
+    def create_user(email = None, screen_name = None, user_name = None, password = None, gender = None, dob = None, is_admin = False, is_banned = False):
+        return User(
+            UserEmail = email,
+            screenName = screen_name or str(random.randint(0,9999999)),
+            userName = user_name,
+            userPassword = password,
+            userGender = gender,
+            userDOB = dob,
+            isAdmin = is_admin,
+            isBanned = is_banned
+        )
+class PostFactory:
+    def create_post(user, comments = None, time_created = None, post_id = None):
+        return Post(
+            user = user,
+            comments = comments,
+            likeCount = 0,
+            dislikeCount = 0,
+            postID = post_id or str(random.randint(0,999999999)),
+            created = time_created
+        )
 
 class User(models.Model):
     #here is where we add attributes for users
