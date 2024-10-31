@@ -17,7 +17,7 @@ class UserFactory:
 class PostFactory:
     def create_post(user, comments = None, time_created = None, post_id = None):
         return Post(
-            user = user,
+            User = user,
             comments = comments,
             likeCount = 0,
             dislikeCount = 0,
@@ -27,7 +27,7 @@ class PostFactory:
 
 class User(models.Model):
     #here is where we add attributes for users
-    id = models.IntegerField(unique = True, default = (random.randint(0,9999999999)), primary_key = True)
+    id = models.AutoField(primary_key = True)
     userEmail = models.EmailField(max_length = 99, null = True, unique = True)
     screenName = models.CharField(unique = True, max_length = 20, default = (random.randint(0,9999999))) 
     userName = models.CharField(max_length = 25, null = True) 
