@@ -4,12 +4,7 @@ import "../App.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
 import Button from "@mui/material/Button";
-import {
-  doCreateUserWithEmailAndPassword,
-  doSignInWithEmailAndPassword,
-  doSignInWithGoogle,
-} from "../firebase/auth";
-import AxiosInstance from "../components/Axios";
+import AuthFactory from "../components/AuthFactory";
 
 function Login() {
   const navigate = useNavigate();
@@ -19,56 +14,38 @@ function Login() {
   const [password, setPassword] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
   const [isLogin, setIsLogin] = useState(true);
 
-  const onSignIn = async (e) => {
-    e.preventDefault();
-    if (!isSigningIn) {
+  const handleAuth = async (method) => {
+    try {
       setIsSigningIn(true);
-      await doSignInWithEmailAndPassword(email, password);
+      await AuthFactory.signIn(method, email, password);
+    } catch (error) {
+      console.error(error);
+      setIsSigningIn(false);
     }
   };
 
-  const onGoogleSignin = async (e) => {
-    e.preventDefault();
-    if (!isSigningIn) {
-      setIsSigningIn(true);
-      doSignInWithGoogle().catch((err) => {
-        setIsSigningIn(false);
-      });
-    }
-  };
-
-  const onSignUp = async (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     if (!isRegistering) {
       setIsRegistering(true);
-      await doCreateUserWithEmailAndPassword(email, password);
+      try {
+        await AuthFactory.signUp(email, password);
+      } catch (error) {
+        console.error(error);
+        setIsRegistering(false);
+      }
     }
-    // AxiosInstance.post('user/',{
-    //   id = 
-    //   userEmail = 
-    //   screenName = 
-    //   userName =
-    //   userPassword = 
-    //   userGender = 
-    //   userDOB = 
-    //   docAcct = 
-    //   isAdmin = 
-    //   isBanned =
-    // }
   };
 
   useEffect(() => {
-    userLoggedIn && navigate("/home");
+    if (userLoggedIn) navigate("/home");
   }, [userLoggedIn]);
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">
       <div className="w-full max-w-md bg-gray-800 p-8 rounded-lg shadow-none relative">
-        {" "}
         {/* Removed shadow */}
         {/* Logo Placeholder */}
         <div className="absolute top-4 left-4">
@@ -131,28 +108,31 @@ function Login() {
             </div>
 
             {/* Login Button */}
-            <div className="mb-2">
-              <button className="w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg">
-                Login
-              </button>
-            </div>
-            <p className="text-gray-400">or</p>
-            <div className="mb-6">
-              <Button
-                variant="contained"
-                sx={{
-                  width: "100%",
-                  marginTop: 1,
-                  paddingY: 1,
-                  textTransform: "none",
-                }}
-                onClick={onGoogleSignin}
-              >
-                <i className="fa-brands fa-google"></i> {/* Password Icon */}
-                <p className="ml-4">Login with Google</p>
-              </Button>
-            </div>
-          </>
+            <div className="mb-2">      
+          <button
+            className="w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg"
+            onClick={() => handleAuth("email")}
+          >
+            Login
+          </button>
+        </div>
+        <p className="text-gray-400">or</p>
+        <div className="mb-6">
+          <Button
+            variant="contained"
+            sx={{
+              width: "100%",
+              marginTop: 1,
+              paddingY: 1,
+              textTransform: "none",
+            }}
+            onClick={() => handleAuth("google")}
+          >
+            <i className="fa-brands fa-google"></i>
+            <p className="ml-4">Login with Google</p>
+          </Button>
+        </div>
+        </>
         ) : (
           <>
             {/* Username Input */}
@@ -254,16 +234,19 @@ function Login() {
                 <i className="fas fa-venus-mars"></i> {/* Gender Icon */}
               </div>
             </div>
-
-            <div className="mb-6">
-              <button className="w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg">
-                Sign Up
-              </button>
-            </div>
+                    
+          <div className="mb-6">
+            <button
+              className="w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg"
+              onClick={handleSignUp}
+            >
+              Sign Up
+            </button>
+          </div>
           </>
         )}
-        {/* Contact Us */}
-        <div className="text-center">
+         {/* Contact Us */}
+         <div className="text-center">
           <a href="/#" className="text-gray-400 hover:underline">
             Contact Us
           </a>
