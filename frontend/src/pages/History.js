@@ -1,37 +1,68 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faSignOutAlt, faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHome,
+  faSignOutAlt,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
 import Lsidebar from "../components/lsidebar";
-import ViewedPostPost from "../components/ViewedPost"; // Child component
+import ViewedPostPost from "../components/ViewedPost";
 import { useAuth } from "../contexts/authContext";
 import RighSideBar from "../components/RightSideBar";
-import { useNavigate } from "react-router-dom"; // For navigation
+import { useNavigate } from "react-router-dom";
 
 function History() {
   const { currentUser } = useAuth();
-  const navigate = useNavigate(); // Initialize navigation
+  const navigate = useNavigate();
 
-  // Function to handle home icon click (navigates to the home page)
   const handleHomeClick = () => {
     navigate("/home");
   };
 
-  // State to manage visibility of the ViewedPostPost components
-  const [isPostVisible1, setIsPostVisible1] = useState(true); // For the first post
-  const [isPostVisible2, setIsPostVisible2] = useState(true); // For the second post
-  const [isPostVisible3, setIsPostVisible3] = useState(true); // For the third post
-  const [isPostVisible4, setIsPostVisible4] = useState(true); // For the fourth post
+  const initialPosts = [
+    {
+      id: 1,
+      name: "Sample Video 1",
+      videoUrl: "path/to/video1.mp4",
+      description: "This is a sample description for video 1.",
+    },
+    {
+      id: 2,
+      name: "Sample Video 2",
+      videoUrl: "path/to/video2.mp4",
+      description: "This is a sample description for video 2.",
+    },
+    {
+      id: 3,
+      name: "Sample Video 3",
+      videoUrl: "path/to/video3.mp4",
+      description: "This is a sample description for video 3.",
+    },
+    {
+      id: 4,
+      name: "Sample Video 4",
+      videoUrl: "path/to/video4.mp4",
+      description: "This is a sample description for video 4.",
+    },
+  ];
+
+  const [posts, setPosts] = useState(initialPosts);
+
+  const handleRemovePost = (id) => {
+    setPosts(posts.filter((post) => post.id !== id));
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-900 text-white">
-      {/* Left Sidebar */}
       <div className="fixed left-0 top-0 h-full w-64 bg-gray-800 z-10">
         <Lsidebar UGI={currentUser} />
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 pl-64 pr-64"> {/* Adjust padding for sidebars */}
-        <div className="fixed top-0 left-0 w-full bg-gray-800 z-20" style={{ marginLeft: '80px' }}> {/* Added left margin */}
+      <div className="flex-1 pl-64 pr-64">
+        <div
+          className="fixed top-0 left-0 w-full bg-gray-800 z-20"
+          style={{ marginLeft: "80px" }}
+        >
           <div className="flex justify-between items-center h-24 px-4 text-white">
             <div className="relative w-full flex-grow max-w-xl mx-auto">
               <input
@@ -46,7 +77,7 @@ function History() {
             <ul className="flex space-x-4 ml-16">
               <li
                 className="flex items-center p-4 hover:text-[#00df9a] cursor-pointer"
-                onClick={handleHomeClick} // Add onClick handler to navigate to home
+                onClick={handleHomeClick}
               >
                 <FontAwesomeIcon icon={faHome} className="mr-2" />
                 Home
@@ -59,49 +90,21 @@ function History() {
           </div>
         </div>
 
-        <div className="pt-32 p-5"> {/* Padding to avoid overlap with fixed navbar */}
+        <div className="pt-32 p-5">
           <h1 className="font-bold text-5xl mb-4">Watch History</h1>
 
-          {/* Conditionally render the posts based on their visibility */}
-          {isPostVisible1 && (
+          {posts.map((post) => (
             <ViewedPostPost
-              name="Sample Video 1"
-              videoUrl="path/to/video1.mp4"
-              description="This is a sample description for video 1."
-              onRemove={() => setIsPostVisible1(false)} // Hide this post when "Remove" is clicked
+              key={post.id}
+              name={post.name}
+              videoUrl={post.videoUrl}
+              description={post.description}
+              onRemove={() => handleRemovePost(post.id)}
             />
-          )}
-
-          {isPostVisible2 && (
-            <ViewedPostPost
-              name="Sample Video 2"
-              videoUrl="path/to/video2.mp4"
-              description="This is a sample description for video 2."
-              onRemove={() => setIsPostVisible2(false)} // Hide this post when "Remove" is clicked
-            />
-          )}
-
-          {isPostVisible3 && (
-            <ViewedPostPost
-              name="Sample Video 3"
-              videoUrl="path/to/video3.mp4"
-              description="This is a sample description for video 3."
-              onRemove={() => setIsPostVisible3(false)} // Hide this post when "Remove" is clicked
-            />
-          )}
-
-          {isPostVisible4 && (
-            <ViewedPostPost
-              name="Sample Video 4"
-              videoUrl="path/to/video4.mp4"
-              description="This is a sample description for video 4."
-              onRemove={() => setIsPostVisible4(false)} // Hide this post when "Remove" is clicked
-            />
-          )}
+          ))}
         </div>
       </div>
 
-      {/* Right Sidebar */}
       <div className="fixed right-0 top-0 h-full w-64 bg-gray-800 z-10">
         <RighSideBar UGI={currentUser} />
       </div>
