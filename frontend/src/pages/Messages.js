@@ -95,7 +95,7 @@ const Messages = () => {
       <Sidebar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="ml-24 flex-1 flex flex-col">
         {/* TopRightSection */}
         <div className="flex justify-end p-4">
           <TopRightSection setOpenModal={() => {}} />

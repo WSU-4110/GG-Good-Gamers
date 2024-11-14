@@ -32,6 +32,7 @@ function TopRightSection({ setOpenModal, currentUser }) {
           alt="User Profile"
           className="rounded-full cursor-pointer"
           width="40px"
+          onClick={() => navigate('/profile')}
         />
       ) : (
         <div>Loading...</div>
