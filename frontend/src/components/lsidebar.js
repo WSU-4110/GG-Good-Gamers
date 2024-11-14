@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { doSignOut } from "../firebase/auth";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export default function Lsidebar({ UGI }) {
   const onSignOut = (e) => {
@@ -9,7 +10,11 @@ export default function Lsidebar({ UGI }) {
       doSignOut();
     }
   };
-
+  const navigate = useNavigate();
+  const handleClockClick = () => {
+    setActiveMenu("clock"); 
+    navigate("/history"); 
+};
   const [activeMenu, setActiveMenu] = useState("home"); // State to manage active menu
   return (
     <aside className="w-24 bg-gray-800 min-h-screen p-4 relative flex flex-col items-center">
@@ -60,6 +65,17 @@ export default function Lsidebar({ UGI }) {
         >
           <i className="fas fa-user-friends text-2xl transition-transform duration-300 transform hover:scale-125"></i>
         </div>
+        <div
+          className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
+            activeMenu === "clock"
+              ? "bg-gray-700 text-purple-500"
+              : "text-gray-400"
+          }`}
+          onClick={handleClockClick}
+        >
+          <i className="fas fa-clock text-2xl transition-transform duration-300 transform hover:scale-125"></i>
+        </div>
+
         <hr className="border-gray-600 my-4 w-full" />
         <div
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
