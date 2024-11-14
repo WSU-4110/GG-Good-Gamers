@@ -25,18 +25,22 @@ function Home() {
   const [posts, setPosts] = useState([]);
   const [openModal, setOpenModal] = useState(false);
 
-  const fetchPosts = async () => {
-    try {
-        const data = await getPosts();
-        setPosts(data)
-    } catch (error) {
-        console.error("Failed to fetch posts:", error);
-    }
-  };
+  // const fetchPosts = async () => {
+  //   try {
+  //       const data = await getPosts();
+  //       setPosts(data)
+  //   } catch (error) {
+  //       console.error("Failed to fetch posts:", error);
+  //   }
+  // };
   
-  useEffect(() => {
-    fetchPosts();
-  }, [])
+  // useEffect(() => {
+  //   fetchPosts();
+  // }, [])
+
+  const handleCreatePost = (newPost) => {
+    setPosts([newPost, ...posts]);
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
@@ -48,10 +52,10 @@ function Home() {
         {posts.map((post, index) => (
           <Post
             key={index}
-            name={post.userName}
-            image={post.postContent}
-            text={post.postDescription}
-            profilePicture={post.userPfp}
+            name={post.name}
+            image={post.image}
+            text={post.text}
+            profilePicture={currentUser?.photoURL}
           />
         ))}
       </main>
@@ -108,8 +112,8 @@ function Home() {
       <CreatePostModal
         open={openModal}
         onClose={() => setOpenModal(false)}
+        onCreatePost={handleCreatePost}
         userName={currentUser?.displayName || 'User'}
-        refetch={fetchPosts}
       />
     </div>
   );
