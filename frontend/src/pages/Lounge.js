@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+
 import Sidebar from '../components/Sidebar';
 import TopRightSection from '../components/TopRightSection';
 import { useAuth } from '../contexts/authContext';
 import { IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
-// Mock Data
 const communityData = [
   { id: 1, name: 'Valorant Strategies', description: 'Discuss all things Valorant here!' },
   { id: 2, name: 'Minecraft Builds', description: 'Share your favorite Minecraft builds and ideas.' },
   { id: 3, name: 'Apex Legends Squad', description: 'Find teammates and strategies for Apex Legends.' },
 ];
 
-// Mock Chat Messages
 const initialMessages = {
   1: [
     { user: 'Alice', content: 'Best agent for beginners?', timestamp: '2:00 PM' },
@@ -33,7 +32,6 @@ function Lounge() {
   const [messages, setMessages] = useState(initialMessages[activeCommunity.id]);
   const [newMessage, setNewMessage] = useState('');
 
-  // Handle switching communities
   const handleCommunityChange = (community) => {
     setActiveCommunity(community);
     setMessages(initialMessages[community.id] || []);
