@@ -1,4 +1,3 @@
-import { doSignOut } from '../firebase/auth';
 import CreatePostModal from '../components/CreatePostModal';
 import Sidebar from '../components/Sidebar';
 import TopRightSection from '../components/TopRightSection'; 
@@ -8,50 +7,51 @@ import "../App.css"; // Ensure global styles are included
 import { useAuth } from "../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 import Post from "../components/Post";
-import Lsidebar from "../components/lsidebar";
-import Rsidebar  from "../components/rsidebar";
 import AxiosInstance from "../components/Axios";
+
+export const getPosts = async () => {
+  try {
+      const response = await AxiosInstance.get('post/');  // Use the correct endpoint for listing posts
+      return response.data;  // Returns the data received from the API
+  } catch (error) {
+      console.error("Error fetching posts:", error);
+      throw error;  // Optional: rethrow the error if you want to handle it elsewhere
+  }
+};
 
 function Home() {
   const navigate = useNavigate();
-  const [activeMenu, setActiveMenu] = useState('home');
   const { currentUser, userLoggedIn } = useAuth();
   const [posts, setPosts] = useState([]);
   const [openModal, setOpenModal] = useState(false);
 
-  const onSignOut = (e) => {
-    setActiveMenu('logout');
-    e.preventDefault();
-    if (userLoggedIn) {
-      doSignOut();
+  const fetchPosts = async () => {
+    try {
+        const data = await getPosts();
+        setPosts(data)
+    } catch (error) {
+        console.error("Failed to fetch posts:", error);
     }
   };
-
+  
   useEffect(() => {
-    if (!userLoggedIn) {
-      navigate('/');
-    }
-  }, [userLoggedIn, currentUser, navigate]);
-
-  // Function to handle post creation
-  const handleCreatePost = (newPost) => {
-    setPosts([newPost, ...posts]);
-  };
+    fetchPosts();
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
       {/* Left Sidebar */}
-      <Sidebar activeMenu={activeMenu} setActiveMenu={setActiveMenu} onSignOut={onSignOut} />
+      <Sidebar activePage={'home'} />
 
       {/* Main Content */}
-      <main className="flex-1 p-8">
+      <main className="flex-1 ml-24 p-8">
         {posts.map((post, index) => (
           <Post
             key={index}
-            name={post.name}
-            image={post.image}
-            text={post.text}
-            profilePicture={currentUser?.photoURL}
+            name={post.userName}
+            image={post.postContent}
+            text={post.postDescription}
+            profilePicture={post.userPfp}
           />
         ))}
       </main>
@@ -108,8 +108,8 @@ function Home() {
       <CreatePostModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        onCreatePost={handleCreatePost}
         userName={currentUser?.displayName || 'User'}
+        refetch={fetchPosts}
       />
     </div>
   );

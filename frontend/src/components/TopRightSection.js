@@ -1,8 +1,11 @@
 import React from 'react';
 import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { useNavigate } from 'react-router-dom';
 
 function TopRightSection({ setOpenModal, currentUser }) {
+  const navigate = useNavigate();
+
   return (
     <div className="flex justify-end mb-4 space-x-6 items-center">
       {/* Notification Icon */}
@@ -28,6 +31,7 @@ function TopRightSection({ setOpenModal, currentUser }) {
           alt="User Profile"
           className="rounded-full cursor-pointer"
           width="40px"
+          onClick={() => navigate('/profile')}
         />
       ) : (
         <div>Loading...</div>

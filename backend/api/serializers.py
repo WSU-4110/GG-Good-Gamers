@@ -15,7 +15,7 @@ class PostSerializer(serializers.ModelSerializer):
     user_serial = serializers.RelatedField(source = 'user', read_only = True)
     class Meta:
         model = Post
-        fields = ('user_serial', 'postID', 'created', 'comments', 'likeCount', 'dislikeCount', )
+        fields = ('user_serial', 'userName', 'postDescription', 'postContent', 'postID', 'created', 'comments', 'likeCount', 'userPfp') 
 
 
 

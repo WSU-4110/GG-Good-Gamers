@@ -28,7 +28,6 @@ const initialMessages = {
 
 function Lounge() {
   const { currentUser } = useAuth();
-  const [activeMenu, setActiveMenu] = useState('lounge');
   const [communities] = useState(communityData);
   const [activeCommunity, setActiveCommunity] = useState(communities[0]);
   const [messages, setMessages] = useState(initialMessages[activeCommunity.id]);
@@ -55,10 +54,10 @@ function Lounge() {
   return (
     <div className="flex min-h-screen bg-gray-900 text-white">
       {/* Sidebar */}
-      <Sidebar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+      <Sidebar activePage={'lounge'} />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 ml-24 flex flex-col">
         {/* TopRightSection */}
         <div className="flex justify-end p-4">
           <TopRightSection setOpenModal={() => {}} currentUser={currentUser} />

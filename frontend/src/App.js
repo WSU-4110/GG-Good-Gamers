@@ -7,6 +7,7 @@ import Home from "./pages/Home"; // Assuming Home.js is in the 'pages' folder
 import History from "./pages/History";
 import "./App.css"; // Global styles
 import { AuthProvider, useAuth } from "./contexts/authContext";
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/lounge" element={<Lounge />} />
             <Route path="/history" element={<History />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </div>
       </Router>
