@@ -1,16 +1,11 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { doSignOut } from '../firebase/auth';
 import CreatePostModal from '../components/CreatePostModal';
 import Sidebar from '../components/Sidebar';
-import TopRightSection from '../components/TopRightSection'; 
-import React, { useEffect, useState } from "react";
-import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome for icons
-import "../App.css"; // Ensure global styles are included
-import { useAuth } from "../contexts/authContext";
-import { useNavigate } from "react-router-dom";
-import Post from "../components/Post";
-import Lsidebar from "../components/lsidebar";
-import Rsidebar  from "../components/rsidebar";
-import AxiosInstance from "../components/Axios";
+import TopRightSection from '../components/TopRightSection';
+import { useAuth } from '../contexts/authContext';
+import Post from '../components/Post';
 
 function Home() {
   const navigate = useNavigate();
