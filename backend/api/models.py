@@ -27,6 +27,7 @@ class User(models.Model):
     docAcct = models.DateTimeField(auto_now_add = True)
     isAdmin = models.BooleanField(default = False)
     isBanned = models.BooleanField(default = False)
+    followList = models.CharField(max_length = 999, null = True, unique = True)
     class Meta:
         ordering = ['docAcct']
 
