@@ -8,6 +8,6 @@ router.register('user', UserViewset, basename='user')
 router.register('post', PostViewset, basename = 'post')
 urlpatterns = router.urls
 
-# urlpatterns = [
-#     path('', home)
+#  urlpatterns = [
+#      path('upload/', views.upload_image, name = "ImageUpload")
 # ]

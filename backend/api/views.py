@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from rest_framework import viewsets, permissions
 from .models import *
 from .serializers import *
 from rest_framework.response import Response
+
 # Create your views here.
 
 # def home(request):
@@ -122,3 +123,7 @@ class PostViewset(viewsets.ViewSet):
         project = self.queryset.get(pk=pk)
         project.delete()
         return Response(status=204)
+    
+    # def upload_image(request):
+    #     if request.Post == 'POST':
+    #         form = ImageForm(request.POST, request.FILES)

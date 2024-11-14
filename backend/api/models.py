@@ -1,5 +1,6 @@
 from django.db import models
 import random
+
 # Create your models here.
 
 class Project(models.Model):
@@ -39,7 +40,7 @@ class Post(models.Model):
    comments = models.CharField(max_length=500, blank=True, null=True)
    likeCount = models.IntegerField(default = 0) 
    dislikeCount = models.IntegerField(default = 0)
-   #postURL = models.ImageField(upload_to = "uploads/")
+   postURL = models.ImageField(upload_to = "uploads/", default = 'uploads/default.jpg')
    class Meta:
         ordering = ['user']
 
