@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import Lounge from './pages/Lounge';
+import Messages from './pages/Messages'; 
 import { AuthProvider } from './contexts/authContext';
 import './App.css';
 
@@ -15,6 +16,7 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/home" element={<Home />} />
             <Route path="/lounge" element={<Lounge />} />
+            <Route path="/messages" element={<Messages />} /> 
           </Routes>
         </div>
       </Router>

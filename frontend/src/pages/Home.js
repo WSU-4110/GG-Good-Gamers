@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Post from '../components/Post';
 import CreatePostModal from '../components/CreatePostModal';
 import Sidebar from '../components/Sidebar';
-import TopRightSection from '../components/TopRightSection'; 
+import TopRightSection from '../components/TopRightSection';
 
 function Home() {
   const navigate = useNavigate();
