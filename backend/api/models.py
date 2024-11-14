@@ -49,3 +49,26 @@ class Post(models.Model):
        return str(self.postID)
    
    # 7:35 part 5 CBI Analytics
+
+class Messaging(models.Model):
+    user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = "user")
+    sender = models.ForeignKey(User, on_delete = models.CASCADE, related_name = "sender")
+    receiver = models.ForeignKey(User, on_delete = models.CASCADE, related_name = "receiver")
+
+    message = models.CharField(max_length = 250, null = True, blank = True )
+    dtSent = models.DateTimeField(auto_now_add = True)
+
+    class Meta:
+        ordering = ['dtSent']
+        verbose_name_plural = "Message"
+    def __str__(self):
+        return f"{self.sender} - {self.receiver}"
+    
+    @property
+    def sender_profile(self):
+        sender_profile = Post.objects.get(user = self.sender)
+        return sender_profile
+    @property
+    def receiver_profile(self):
+        receiver_profile = Post.objects.get(user = self.receiver)
+
