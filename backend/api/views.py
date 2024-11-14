@@ -124,6 +124,12 @@ class PostViewset(viewsets.ViewSet):
         project.delete()
         return Response(status=204)
     
-    # def upload_image(request):
-    #     if request.Post == 'POST':
-    #         form = ImageForm(request.POST, request.FILES)
+    def upload_image(request):
+        if request.method == 'POST':
+           form = Post(request.POST, request.FILES)
+           if form.is_vaild():
+               form.save()
+               return redirect('upload')
+        else:
+            form = Post()
+        return render(request, )
