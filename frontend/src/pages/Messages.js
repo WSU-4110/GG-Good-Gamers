@@ -124,8 +124,6 @@ const Messages = () => {
               />
             </div>
 
-            {/* Pinned Contacts Section */}
-            {/* Pinned Contacts Section */}
 {pinnedContacts.length > 0 && (
   <div className="mb-4">
     <div className="flex items-center space-x-2 text-gray-300 text-md font-semibold mb-2">
@@ -229,10 +227,6 @@ const Messages = () => {
     </div>
   ))}
 </div>
-
-
-
-
 
             {/* Chat input section */}
             <div className="flex items-center p-4 border-t border-gray-600 bg-gray-800">

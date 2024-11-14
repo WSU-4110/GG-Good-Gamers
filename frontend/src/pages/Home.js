@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import '../App.css';
-import { useAuth } from '../contexts/authContext';
-import { doSignOut } from '../firebase/auth';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Post from '../components/Post';
+import { doSignOut } from '../firebase/auth';
 import CreatePostModal from '../components/CreatePostModal';
 import Sidebar from '../components/Sidebar';
 import TopRightSection from '../components/TopRightSection';
+import { useAuth } from '../contexts/authContext';
+import Post from '../components/Post';
 
 function Home() {
   const navigate = useNavigate();

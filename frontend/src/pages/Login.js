@@ -9,10 +9,11 @@ import {
   doSignInWithEmailAndPassword,
   doSignInWithGoogle,
 } from "../firebase/auth";
+import AxiosInstance from "../components/Axios";
 
 function Login() {
   const navigate = useNavigate();
-  const { userLoggedIn } = useAuth();
+  const { userLoggedIn, currentUser } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,6 +47,18 @@ function Login() {
       setIsRegistering(true);
       await doCreateUserWithEmailAndPassword(email, password);
     }
+    // AxiosInstance.post('user/',{
+    //   id = 
+    //   userEmail = 
+    //   screenName = 
+    //   userName =
+    //   userPassword = 
+    //   userGender = 
+    //   userDOB = 
+    //   docAcct = 
+    //   isAdmin = 
+    //   isBanned =
+    // }
   };
 
   useEffect(() => {
@@ -59,12 +72,7 @@ function Login() {
         {/* Removed shadow */}
         {/* Logo Placeholder */}
         <div className="absolute top-4 left-4">
-          <h1
-            onClick={() => navigate("/home")}
-            className="text-4xl text-green-500 font-bold"
-          >
-            GG
-          </h1>
+          <h1 className="text-4xl text-green-500 font-bold">GG</h1>
         </div>
         {/* Login / Sign Up Tabs */}
         <div className="flex justify-between mb-8 mt-12">
