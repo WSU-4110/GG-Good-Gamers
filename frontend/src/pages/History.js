@@ -6,6 +6,9 @@ import ViewedPostPost from "../components/ViewedPost"; // Child component
 import { useAuth } from "../contexts/authContext";
 import RighSideBar from "../components/RightSideBar";
 import { useNavigate } from "react-router-dom"; // For navigation
+import Sidebar from "../components/Sidebar";
+import TopRightSection from "../components/TopRightSection";
+import HistoryRidebar from "../components/RightSideBar";
 
 function History() {
   const { currentUser } = useAuth();
@@ -25,14 +28,12 @@ function History() {
   return (
     <div className="flex min-h-screen bg-gray-900 text-white">
       {/* Left Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-64 bg-gray-800 z-10">
-        <Lsidebar UGI={currentUser} />
-      </div>
+      <Sidebar activePage={'history'} />
 
       {/* Main Content Area */}
-      <div className="flex-1 pl-64 pr-64"> {/* Adjust padding for sidebars */}
-        <div className="fixed top-0 left-0 w-full bg-gray-800 z-20" style={{ marginLeft: '80px' }}> {/* Added left margin */}
-          <div className="flex justify-between items-center h-24 px-4 text-white">
+      <div className="flex-1 mr-64 ml-24"> {/* Adjust padding for sidebars */}
+        <div className="fixed top-0 left-9 w-full bg-gray-800 z-20" style={{ marginLeft: '80px' }}> {/* Added left margin */}
+          <div className="flex justify-between items-center h-24 text-white">
             <div className="relative w-full flex-grow max-w-xl mx-auto">
               <input
                 type="text"
@@ -43,23 +44,10 @@ function History() {
                 <FontAwesomeIcon icon={faSearch} />
               </span>
             </div>
-            <ul className="flex space-x-4 ml-16">
-              <li
-                className="flex items-center p-4 hover:text-[#00df9a] cursor-pointer"
-                onClick={handleHomeClick} // Add onClick handler to navigate to home
-              >
-                <FontAwesomeIcon icon={faHome} className="mr-2" />
-                Home
-              </li>
-              <li className="flex items-center p-4 hover:text-[#00df9a]">
-                <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
-                Logout
-              </li>
-            </ul>
           </div>
         </div>
 
-        <div className="pt-32 p-5"> {/* Padding to avoid overlap with fixed navbar */}
+        <div className="pt-32"> {/* Padding to avoid overlap with fixed navbar */}
           <h1 className="font-bold text-5xl mb-4">Watch History</h1>
 
           {/* Conditionally render the posts based on their visibility */}
@@ -103,7 +91,7 @@ function History() {
 
       {/* Right Sidebar */}
       <div className="fixed right-0 top-0 h-full w-64 bg-gray-800 z-10">
-        <RighSideBar UGI={currentUser} />
+        <HistoryRidebar UGI={currentUser} />
       </div>
     </div>
   );

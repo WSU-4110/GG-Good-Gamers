@@ -1,0 +1,55 @@
+{
+    "conversations": {
+      "individual": {
+        "Faraz Tariq": [
+          { "user": "Faraz Tariq", "content": "Hey, what's up?", "timestamp": "2:00 PM" },
+          { "user": "You", "content": "Not much, you?", "timestamp": "2:01 PM" },
+          { "user": "Faraz Tariq", "content": "Just chilling. Any plans for tonight?", "timestamp": "2:05 PM" },
+          { "user": "You", "content": "Might watch a movie. Any recommendations?", "timestamp": "2:06 PM" },
+          { "user": "Faraz Tariq", "content": "Definitely! Try that new sci-fi one that just came out.", "timestamp": "2:08 PM" },
+          { "user": "You", "content": "Sounds good, thanks!", "timestamp": "2:09 PM" }
+        ],
+        "Tina Tzoo": [
+          { "user": "Tina Tzoo", "content": "Hey, did you get the notes for last week's meeting?", "timestamp": "10:00 AM" },
+          { "user": "You", "content": "Yes, I did. Do you need them?", "timestamp": "10:01 AM" },
+          { "user": "Tina Tzoo", "content": "That would be amazing, thanks!", "timestamp": "10:02 AM" },
+          { "user": "You", "content": "Just sent them over.", "timestamp": "10:05 AM" },
+          { "user": "Tina Tzoo", "content": "Perfect. You saved me! :)", "timestamp": "10:06 AM" }
+        ],
+        "MKBHD": [
+          { "user": "MKBHD", "content": "Let’s chat about the new tech release!", "timestamp": "3:30 PM" },
+          { "user": "You", "content": "Absolutely, I'm excited about it!", "timestamp": "3:32 PM" },
+          { "user": "MKBHD", "content": "Same here. It's supposed to have some groundbreaking features.", "timestamp": "3:34 PM" },
+          { "user": "You", "content": "Can't wait to see how it compares to the previous model.", "timestamp": "3:35 PM" }
+        ],
+        "Tech Enthusiast": [
+          { "user": "Tech Enthusiast", "content": "New tech release?", "timestamp": "4:00 PM" },
+          { "user": "You", "content": "Yeah, did you see the specs?", "timestamp": "4:01 PM" },
+          { "user": "Tech Enthusiast", "content": "I did! Looks impressive.", "timestamp": "4:02 PM" },
+          { "user": "You", "content": "Totally! The camera upgrade is what I’m looking forward to.", "timestamp": "4:05 PM" },
+          { "user": "Tech Enthusiast", "content": "Same! Let’s do a comparison when it’s out.", "timestamp": "4:06 PM" }
+        ],
+        "Gamer Hub": [
+          { "user": "Gamer Hub", "content": "Gaming tonight?", "timestamp": "7:00 PM" },
+          { "user": "You", "content": "Maybe! What game are you thinking?", "timestamp": "7:01 PM" },
+          { "user": "Gamer Hub", "content": "Apex Legends or Valorant?", "timestamp": "7:02 PM" },
+          { "user": "You", "content": "Let’s do Valorant! What time?", "timestamp": "7:05 PM" },
+          { "user": "Gamer Hub", "content": "How about 8 PM?", "timestamp": "7:06 PM" },
+          { "user": "You", "content": "Perfect, see you then.", "timestamp": "7:07 PM" }
+        ]
+      },
+      "group": {
+        "Tech Talk": [
+          { "user": "Faraz Tariq", "content": "Hey team! Have you guys tried the new device yet?", "timestamp": "5:00 PM" },
+          { "user": "Tina Tzoo", "content": "I just got mine! The camera is phenomenal.", "timestamp": "5:02 PM" },
+          { "user": "MKBHD", "content": "Agreed, I’ve been testing it. The speed is next level.", "timestamp": "5:03 PM" },
+          { "user": "You", "content": "Sounds amazing! Do you guys think it's worth the upgrade?", "timestamp": "5:05 PM" },
+          { "user": "Faraz Tariq", "content": "Totally. Especially if you use it for photos and videos.", "timestamp": "5:07 PM" },
+          { "user": "Tina Tzoo", "content": "And the battery life has improved too. I went all day without charging.", "timestamp": "5:10 PM" },
+          { "user": "MKBHD", "content": "Yup, I noticed that as well. Perfect for people who are always on the go.", "timestamp": "5:12 PM" },
+          { "user": "You", "content": "I’m convinced. I’m getting one!", "timestamp": "5:15 PM" }
+        ]
+      }
+    }
+  }
+  

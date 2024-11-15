@@ -5,6 +5,7 @@ from .models import *
 from .serializers import *
 from rest_framework.response import Response
 
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 
 # def home(request):
@@ -100,7 +101,7 @@ class PostViewset(viewsets.ViewSet):
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user=None)  # Associate the authenticated user with the post
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=400)

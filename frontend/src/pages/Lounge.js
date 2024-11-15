@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+
 import Sidebar from '../components/Sidebar';
 import TopRightSection from '../components/TopRightSection';
 import { useAuth } from '../contexts/authContext';
 import { IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
-// Mock Data
 const communityData = [
   { id: 1, name: 'Valorant Strategies', description: 'Discuss all things Valorant here!' },
   { id: 2, name: 'Minecraft Builds', description: 'Share your favorite Minecraft builds and ideas.' },
   { id: 3, name: 'Apex Legends Squad', description: 'Find teammates and strategies for Apex Legends.' },
 ];
 
-// Mock Chat Messages
 const initialMessages = {
   1: [
     { user: 'Alice', content: 'Best agent for beginners?', timestamp: '2:00 PM' },
@@ -28,13 +27,11 @@ const initialMessages = {
 
 function Lounge() {
   const { currentUser } = useAuth();
-  const [activeMenu, setActiveMenu] = useState('lounge');
   const [communities] = useState(communityData);
   const [activeCommunity, setActiveCommunity] = useState(communities[0]);
   const [messages, setMessages] = useState(initialMessages[activeCommunity.id]);
   const [newMessage, setNewMessage] = useState('');
 
-  // Handle switching communities
   const handleCommunityChange = (community) => {
     setActiveCommunity(community);
     setMessages(initialMessages[community.id] || []);
@@ -55,10 +52,10 @@ function Lounge() {
   return (
     <div className="flex min-h-screen bg-gray-900 text-white">
       {/* Sidebar */}
-      <Sidebar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+      <Sidebar activePage={'lounge'} />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 ml-24 flex flex-col">
         {/* TopRightSection */}
         <div className="flex justify-end p-4">
           <TopRightSection setOpenModal={() => {}} currentUser={currentUser} />
