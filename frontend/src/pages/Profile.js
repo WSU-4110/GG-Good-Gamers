@@ -5,12 +5,15 @@ import React, { useEffect, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome for icons
 import "../App.css"; // Ensure global styles are included
 import { useAuth } from "../contexts/authContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Post from "../components/Post";
 import AxiosInstance from "../components/Axios";
 import { Box, Grid, Grid2, Paper, Stack, Typography } from "@mui/material";
 
 function Profile() {
+  const [searchParams] = useSearchParams();
+  const username = searchParams.get("username");
+
   const navigate = useNavigate();
   const { currentUser, userLoggedIn } = useAuth();
   const [posts, setPosts] = useState([]);
@@ -37,21 +40,21 @@ function Profile() {
         postContent: null,
         postDescription: "Post description",
         userPfp: currentUser?.photoURL,
-        image: 'https://i.redd.it/qnj736563m151.jpg'
+        image: "https://i.redd.it/qnj736563m151.jpg",
       },
       {
         userName: "mohue",
         postContent: null,
         postDescription: "Post description",
         userPfp: currentUser?.photoURL,
-        image: 'https://www.godisageek.com/wp-content/uploads/SMG2-001.jpg'
+        image: "https://www.godisageek.com/wp-content/uploads/SMG2-001.jpg",
       },
       {
         userName: "mohue",
         postContent: null,
         postDescription: "Post description",
         userPfp: currentUser?.photoURL,
-        image: 'https://i.ytimg.com/vi/RRuBCBMLuQI/maxresdefault.jpg'
+        image: "https://i.ytimg.com/vi/RRuBCBMLuQI/maxresdefault.jpg",
       },
       {
         userName: "mohue",
@@ -72,19 +75,16 @@ function Profile() {
         {/* Profile Header */}
         {currentUser && (
           <div className="bg-gray-800 p-6 rounded-lg mb-8 flex justify-between">
-            <div className="ml-8">
+            <div className="mt-4 ml-8">
               <img
                 src={currentUser.photoURL || "https://via.placeholder.com/150"}
                 alt="Profile"
                 className="ml-3 w-20 h-20 rounded-full"
               />
-              <h2 className="mt-3 text-l ">
-                {currentUser.displayName || "Name"}
-              </h2>
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex flex-col">
-                <h2 className="text-2xl font-bold">{"mohue03"}</h2>
+                <h2 className="text-2xl font-bold">{username}</h2>
                 <p className="text-gray-400">{"User bio goes here."}</p>
                 <button className="mt-4 bg-purple-500 px-4 py-2 rounded-lg">
                   Edit Profile
