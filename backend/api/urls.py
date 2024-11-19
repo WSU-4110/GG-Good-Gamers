@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import *
 from rest_framework.routers import DefaultRouter
 
@@ -8,6 +8,6 @@ router.register('user', UserViewset, basename='user')
 router.register('post', PostViewset, basename = 'post')
 urlpatterns = router.urls
 
-# urlpatterns = [
-#     path('', home)
-# ]
+urlpatterns = [
+    path('', include(router.urls))
+]
