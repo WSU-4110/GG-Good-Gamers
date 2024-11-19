@@ -1,13 +1,13 @@
-from django.urls import path
-from .views import *
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from .views import LoungeViewSet, PostViewSet, CommentViewSet, UserViewSet
 
 router = DefaultRouter()
-router.register('project', ProjectViewset, basename='project')
-router.register('user', UserViewset, basename='user')
-router.register('post', PostViewset, basename = 'post')
-urlpatterns = router.urls
+router.register(r'lounges', LoungeViewSet)
+router.register(r'posts', PostViewSet)
+router.register(r'comments', CommentViewSet)
+router.register(r'users', UserViewSet)
 
-# urlpatterns = [
-#     path('', home)
-# ]
+urlpatterns = [
+    path('', include(router.urls)),
+]
