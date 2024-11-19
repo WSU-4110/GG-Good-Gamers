@@ -54,22 +54,34 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
       {/* Icons (Like, Comment, Share, Bookmark) */}
       <div className="flex justify-between items-center mt-4">
         <div className="flex space-x-4">
-          <IconButton onClick={handleLikeClick} sx={{ color: liked ? '#9b5de5' : 'white' }}>
+          <IconButton
+            onClick={handleLikeClick}
+            sx={{ color: liked ? '#9b5de5' : 'white' }}
+            aria-label="like"
+          >
             {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
           </IconButton>
           <IconButton
             onClick={() => setCommentVisible(!commentVisible)}
             sx={{ color: 'white' }}
+            aria-label="comment"
           >
             <CommentIcon />
           </IconButton>
-          <IconButton sx={{ color: 'white' }}>
+          <IconButton
+            sx={{ color: 'white' }}
+            aria-label="share"
+          >
             <ShareIcon />
           </IconButton>
         </div>
 
         {/* Favorite Button aligned to the right */}
-        <IconButton onClick={handleFavoriteClick} sx={{ color: favorited ? '#9b5de5' : 'white' }}>
+        <IconButton
+          onClick={handleFavoriteClick}
+          sx={{ color: favorited ? '#9b5de5' : 'white' }}
+          aria-label="favorite"
+        >
           {favorited ? <BookmarkIcon /> : <BookmarkBorderIcon />}
         </IconButton>
       </div>
@@ -99,7 +111,11 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
                 }
               }}
             />
-            <IconButton onClick={() => handleSendComment(name)} sx={{ color: 'white' }}>
+            <IconButton
+              onClick={() => handleSendComment(name)}
+              sx={{ color: 'white' }}
+              aria-label="send comment"
+            >
               <SendIcon />
             </IconButton>
           </div>
