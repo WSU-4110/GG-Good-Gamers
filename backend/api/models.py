@@ -1,6 +1,5 @@
 from django.db import models
-import random
-# Create your models here.
+import uuid
 
 class Project(models.Model):
     name = models.CharField(unique=True, max_length=100)
@@ -16,9 +15,9 @@ class Project(models.Model):
 
 class User(models.Model):
     #here is where we add attributes for users
-    id = models.IntegerField(unique = True, default = (random.randint(0,9999999999)), primary_key = True)
+    id = models.BigAutoField(unique = True, primary_key = True)
     userEmail = models.EmailField(max_length = 99, null = True, unique = True)
-    screenName = models.CharField(unique = True, max_length = 20, default = (random.randint(0,9999999))) 
+    screenName = models.CharField(unique = True, max_length = 20, default = str(uuid.uuid4())[:8]) 
     userName = models.CharField(max_length = 25, null = True) 
     userPassword = models.CharField(max_length = 25, null = True)
     userGender = models.IntegerField(null = True) # 0 = male, 1 = female
@@ -49,4 +48,3 @@ class Post(models.Model):
    def __str__(self):
        return str(self.postID)
    
-   # 7:35 part 5 CBI Analytics

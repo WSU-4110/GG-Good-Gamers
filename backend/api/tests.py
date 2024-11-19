@@ -5,7 +5,6 @@ from .models import Project, User, Post
 class ProjectViewsetTest(APITestCase):
 
     def setUp(self):
-        # Create a test project
         self.project = Project.objects.create(
             name="Test Project",
             start_date="2023-01-01",
@@ -13,7 +12,7 @@ class ProjectViewsetTest(APITestCase):
             comments="This is a test project.",
             status="Active",
         )
-        self.project_url = "/projects/"  # Update with your actual endpoint
+        self.project_url = "/project/"  
 
     def test_list_projects(self):
         """Test listing all projects"""
@@ -30,7 +29,7 @@ class ProjectViewsetTest(APITestCase):
             "status": "Pending",
         }
         response = self.client.post(self.project_url, data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Project.objects.count(), 2)
 
     def test_retrieve_project(self):
@@ -41,7 +40,13 @@ class ProjectViewsetTest(APITestCase):
 
     def test_update_project(self):
         """Test updating a project"""
-        data = {"name": "Updated Project", "status": "Completed"}
+        data = {
+            "name": "Updated Project",
+            "start_date": "2023-01-01",
+            "end_date": "2023-12-31",
+            "comments": "Updated comments",
+            "status": "Completed",
+        }
         response = self.client.put(f"{self.project_url}{self.project.id}/", data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.project.refresh_from_db()
@@ -57,11 +62,13 @@ class ProjectViewsetTest(APITestCase):
 class UserViewsetTest(APITestCase):
 
     def setUp(self):
+        User.objects.all().delete()
         self.user = User.objects.create(
             userEmail="test@example.com",
             userName="TestUser",
+            screenName="UniqeName",
         )
-        self.user_url = "/users/"  # Update with your actual endpoint
+        self.user_url = "/user/"   
 
     def test_list_users(self):
         """Test listing all users"""
@@ -76,7 +83,7 @@ class UserViewsetTest(APITestCase):
             "userPassword": "password123",
         }
         response = self.client.post(self.user_url, data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.count(), 2)
 
     def test_retrieve_user(self):
@@ -96,7 +103,7 @@ class PostViewsetTest(APITestCase):
             postDescription="A test post",
             postContent="Test content",
         )
-        self.post_url = "/posts/"  # Update with your actual endpoint
+        self.post_url = "/post/" 
 
     def test_list_posts(self):
         """Test listing all posts"""
@@ -111,7 +118,7 @@ class PostViewsetTest(APITestCase):
             "postContent": "New content",
         }
         response = self.client.post(self.post_url, data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Post.objects.count(), 2)
 
     def test_retrieve_post(self):
