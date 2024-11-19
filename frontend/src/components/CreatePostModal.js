@@ -1,10 +1,30 @@
 import React, { useState } from 'react';
 import { Modal, Box, Button, TextField, IconButton, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import db from "../firebase/firebase"
 
-const CreatePostModal = ({ open, onClose, onCreatePost, userName }) => {
+const CreatePostModal = ({ open, onClose, userName }) => {
   const [newPostText, setNewPostText] = useState("");
   const [newPostImage, setNewPostImage] = useState(null);
+  
+  const onCreatePost = async () => {
+    // const docRef = doc(db, "posts", id);
+    // const payload = {
+    //   userRef: `user/${'mohue'}`,
+    //   text: newPostText
+    // }
+    // await setDoc(docRef, payload);
+    
+
+    const collectionRef = collection(db, "posts")
+    const userRef = doc(db, "users", "mohue")
+    const payload = {
+      userRef: userRef,
+      text: newPostText
+    }
+    await addDoc(collectionRef, payload);
+  }
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
