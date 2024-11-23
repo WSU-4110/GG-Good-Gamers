@@ -5,19 +5,48 @@ import TopRightSection from "../components/TopRightSection";
 import React, { useEffect, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome for icons
 import "../App.css"; // Ensure global styles are included
-import { useAuth } from "../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 import Post from "../components/Post";
 import AxiosInstance from "../components/Axios";
-import { collection, getDoc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { useAuth } from "../contexts/authContext";
 
 function Home() {
   const navigate = useNavigate();
   const { currentUser, userLoggedIn } = useAuth();
+
+  const [user, setUser] = useState();
   const [posts, setPosts] = useState([]);
   const [openModal, setOpenModal] = useState(false);
 
+  const getUserData = async () => {
+    const usersCollection = collection(db, "users");
+    const userQuery = query(usersCollection, where("email", "==", currentUser.email));
+    const querySnapshot = await getDocs(userQuery);
+    return querySnapshot.docs[0].data();
+  };
+
   useEffect(() => {
+    // Fetch current user data
+    const fetchUserData = async () => {
+      try {
+        const userData = await getUserData();
+        setUser(userData); // Set user state with the retrieved data
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchUserData(); // Call the async function
+
+    // Fetch posts
     onSnapshot(collection(db, "posts"), async (snapshot) => {
       const postsWithUsers = await Promise.all(
         snapshot.docs.map(async (docSnapshot) => {
@@ -47,17 +76,18 @@ function Home() {
 
       {/* Main Content */}
       <main className="flex-1 ml-24 p-8">
-        {posts.length !== 0 && posts.map((post, index) => (
-          <>
+        {posts.length !== 0 &&
+          posts.map((post, index) => (
+            <>
               <Post
                 key={index}
                 name={post?.user?.username && post.user.username}
                 image={post?.image}
                 text={post?.text}
-                profilePicture={currentUser?.photoURL}
+                profilePicture={post?.user?.pfpURL && post?.user?.pfpURL}
               />
-          </>
-        ))}
+            </>
+          ))}
       </main>
 
       {/* Right Sidebar */}
@@ -65,7 +95,7 @@ function Home() {
         {/* Top-right section */}
         <TopRightSection
           setOpenModal={setOpenModal}
-          currentUser={currentUser}
+          currentUser={user}
         />
 
         {/* Suggested for You */}
@@ -125,7 +155,7 @@ function Home() {
       <CreatePostModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        userName={currentUser?.displayName || "User"}
+        email={currentUser?.email || null}
       />
     </div>
   );
