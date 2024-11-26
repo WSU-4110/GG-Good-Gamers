@@ -13,6 +13,7 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
+
 class User(models.Model):
     #here is where we add attributes for users
     id = models.BigAutoField(unique = True, primary_key = True)
@@ -32,6 +33,7 @@ class User(models.Model):
     def __str__(self):
         return self.userEmail
     
+
 class Post(models.Model):
    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
    postID = models.BigAutoField(primary_key = True)
@@ -49,7 +51,6 @@ class Post(models.Model):
    def __str__(self):
        return str(self.postID)
    
-   # 7:35 part 5 CBI Analytics
 
 class Messaging(models.Model):
     user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = "user")
@@ -72,4 +73,5 @@ class Messaging(models.Model):
     @property
     def receiver_profile(self):
         receiver_profile = Post.objects.get(user = self.receiver)
+        return receiver_profile
 
