@@ -12,21 +12,40 @@ import usePostModule from './PostModule';
 
 export default function Post({ name = "Deleted User", image, text, profilePicture }) {
   const {
-    liked,
-    favorited,
-    commentVisible,
-    setCommentVisible,
-    comment,
-    postedComments,
-    handleLikeClick,
-    handleFavoriteClick,
-    handleCommentChange,
-    handleSendComment,
+    // Indicates if the post has been liked by the user (Boolean)
+    liked, 
+
+    // Indicates if the post has been favorited (Boolean)
+    favorited, 
+
+    // Controls visibility of the comment section (Boolean)
+    commentVisible, 
+
+    // Function to toggle the visibility of the comment section
+    setCommentVisible, 
+
+    // Stores the current value of the comment input field (String)
+    comment, 
+
+    // Array of comments already posted on the post
+    postedComments, 
+
+    // Function to handle the "like" button click event
+    handleLikeClick, 
+
+    // Function to handle the "favorite" button click event
+    handleFavoriteClick, 
+
+    // Function to update the comment input field as the user types
+    handleCommentChange, 
+
+    // Function to submit a new comment when the user presses Enter or clicks send
+    handleSendComment, 
   } = usePostModule();
 
   return (
     <div className="bg-gray-800 p-6 rounded-lg mb-2">
-      {/* Name and Profile Picture */}
+      {/* Displays the user's name and profile picture */}
       <div className="flex items-center mb-4">
         <img
           src={profilePicture || 'https://via.placeholder.com/40'}
@@ -37,46 +56,64 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
         <h3 className="text-xl font-semibold">{name}</h3>
       </div>
 
-      {/* Image with improved styling */}
+      {/* Displays an image if one is provided */}
       {image && (
         <div className="w-full h-72 bg-gray-700 rounded-lg overflow-hidden my-4">
           <img src={image} alt="Uploaded" className="w-full h-full object-contain" />
         </div>
       )}
 
-      {/* Post Text with username before caption */}
+      {/* Displays the text content of the post */}
       <div className="text-left mb-2">
         <p className="text-white">
           <span className="font-semibold mr-2">{name}</span> {text}
         </p>
       </div>
 
-      {/* Icons (Like, Comment, Share, Bookmark) */}
+      {/* Action buttons (like, comment, share, favorite) */}
       <div className="flex justify-between items-center mt-4">
         <div className="flex space-x-4">
-          <IconButton onClick={handleLikeClick} sx={{ color: liked ? '#9b5de5' : 'white' }}>
+          {/* Like button: Toggles `liked` state */}
+          <IconButton
+            onClick={handleLikeClick}
+            sx={{ color: liked ? '#9b5de5' : 'white' }}
+            aria-label="like"
+          >
             {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
           </IconButton>
+
+          {/* Comment button: Toggles `commentVisible` state */}
           <IconButton
             onClick={() => setCommentVisible(!commentVisible)}
             sx={{ color: 'white' }}
+            aria-label="comment"
           >
             <CommentIcon />
           </IconButton>
-          <IconButton sx={{ color: 'white' }}>
+
+          {/* Share button: Placeholder, no functionality yet */}
+          <IconButton
+            sx={{ color: 'white' }}
+            aria-label="share"
+          >
             <ShareIcon />
           </IconButton>
         </div>
 
-        {/* Favorite Button aligned to the right */}
-        <IconButton onClick={handleFavoriteClick} sx={{ color: favorited ? '#9b5de5' : 'white' }}>
+        {/* Favorite button: Toggles `favorited` state */}
+        <IconButton
+          onClick={handleFavoriteClick}
+          sx={{ color: favorited ? '#9b5de5' : 'white' }}
+          aria-label="favorite"
+        >
           {favorited ? <BookmarkIcon /> : <BookmarkBorderIcon />}
         </IconButton>
       </div>
 
-      {/* Comments Section */}
+      {/* Comment section */}
       {commentVisible && (
         <div className="mt-4">
+          {/* List of existing comments */}
           {postedComments.length > 0 && (
             <div className="mb-4">
               {postedComments.map((c, idx) => (
@@ -87,6 +124,7 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
             </div>
           )}
           <div className="flex items-center space-x-4">
+            {/* Input for typing a new comment */}
             <input
               type="text"
               value={comment}
@@ -99,7 +137,12 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
                 }
               }}
             />
-            <IconButton onClick={() => handleSendComment(name)} sx={{ color: 'white' }}>
+            {/* Button to send the comment */}
+            <IconButton
+              onClick={() => handleSendComment(name)}
+              sx={{ color: 'white' }}
+              aria-label="send comment"
+            >
               <SendIcon />
             </IconButton>
           </div>
