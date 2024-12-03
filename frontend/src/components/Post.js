@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { IconButton, Typography } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -14,9 +14,10 @@ import db from "../firebase/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 
 
-export default function Post({ name = "Deleted User", image, text, profilePicture, postId, likeCount }) {
+export default function Post({ name = "Deleted User", image, text, profilePicture, postId, likeCount : initializeLikeCount = 0}) {
   const {
     liked,
+    setLiked,
     favorited,
     commentVisible,
     setCommentVisible,
@@ -27,9 +28,17 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
     handleCommentChange,
     handleSendComment,
   } = usePostModule();
+  const [likeCount, setLikeCount] = useState(initializeLikeCount);
 
   const navigate = useNavigate();
 
+  const handleLike = async() => {
+    const isLiked = !liked; 
+    const newLikeCount = isLiked ? likeCount + 1 : likeCount - 1;
+    setLikeCount(newLikeCount);
+    setLiked(isLiked);
+    await handleLikeClick(postId, newLikeCount);
+  };
   return (
     <div className="bg-gray-800 p-6 rounded-lg mb-2">
       {/* Name and Profile Picture */}
@@ -60,11 +69,10 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
       {/* Icons (Like, Comment, Share, Bookmark) */}
       <div className="flex justify-between items-center mt-4">
         <div className="flex space-x-4">
-        <IconButton onClick={() => handleLikeClick(postId, likeCount)}>              {/* LLOOK HERE*/}
+        <IconButton onClick={handleLike}>              {/* LLOOK HERE*/}
           <FavoriteIcon color={liked ? "error" : "default"} />
-          <Typography variant="caption">{likeCount}</Typography>
+          <Typography variant="caption">{likeCount || 0}</Typography>
         </IconButton>
-
           {/* <IconButton onClick={handleLikeClick} sx={{ color: liked ? '#9b5de5' : 'white' }}>
             {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
           </IconButton> */}

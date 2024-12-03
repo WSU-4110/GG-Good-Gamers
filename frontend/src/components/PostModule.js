@@ -21,18 +21,23 @@ const usePostModule = () => {
   const [comment, setComment] = useState("");
   const [postedComments, setPostedComments] = useState([]);
   //const [posts, setPosts] = useState([]);
+  const [likeCount, setLikeCount] = useState(0);
 
-  const handleLikeClick = async(postId, currentLikeCount) => {
-    const newLikeCount = liked ? currentLikeCount - 1 : currentLikeCount + 1;
-    setLiked((prev) => !prev);
-    //display likeCount and increment db
+
+  const handleLikeClick = async(postId, likeCount) => {
+    if (typeof likeCount !== 'number' || isNaN(likeCount)){
+      console.error("Invalid likeCount: ", likeCount);
+      return;
+    }
     try{
       const postRef = doc(db, "posts", postId);
-      await updateDoc(postRef, {likeCount : newLikeCount});
+      await updateDoc(postRef, {likeCount});
+      console.log("Successfully updated likeCount: ", likeCount);
     } 
     catch(error){
       console.error("Error updating like count: ", error);
     }
+
   };
 
   const handleFavoriteClick = () => {
@@ -89,6 +94,8 @@ const usePostModule = () => {
 
   return {
     liked, //booloean value to check if you have liked already.
+    setLiked,
+    handleLikeClick,
     favorited,
     commentVisible,
     setCommentVisible,
@@ -98,6 +105,7 @@ const usePostModule = () => {
     handleFavoriteClick,
     handleCommentChange,
     handleSendComment,
+    
   };
 };
 
