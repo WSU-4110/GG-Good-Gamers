@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Box,
@@ -19,12 +19,24 @@ import {
   where,
 } from "firebase/firestore";
 import db from "../firebase/firebase";
+import { storage } from "../firebase/firebase";
+import { ref, uploadBytes } from "firebase/storage"
+import { v4 } from 'uuid';
 
-const CreatePostModal = ({ open, onClose, email }) => {
+const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
   const [newPostText, setNewPostText] = useState("");
   const [newPostImage, setNewPostImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
-  const onCreatePost = async () => {
+  const uploadImage = (imageUuid) => {
+    if (imageFile == null) return;
+    const imageRef = ref(storage, `images/${imageUuid}`);
+    uploadBytes(imageRef, imageFile).then(() => {
+      alert("Image Uploaded")
+    })
+  }
+
+  const onCreatePost = async (imageUuid) => {
     // const docRef = doc(db, "posts", id);
     // const payload = {
     //   userRef: `user/${'mohue'}`,
@@ -43,6 +55,7 @@ const CreatePostModal = ({ open, onClose, email }) => {
       userRef: userRef,
       text: newPostText,
       createdAt: new Date(),
+      imageId: imageUuid,
     };
     await addDoc(collectionRef, payload);
   };
@@ -51,15 +64,23 @@ const CreatePostModal = ({ open, onClose, email }) => {
     const file = e.target.files[0];
     if (file) {
       setNewPostImage(URL.createObjectURL(file));
+      setImageFile(file);
     }
   };
 
   const handleCreatePost = () => {
-    onCreatePost();
+    const imageUuid = v4();
+    uploadImage(imageUuid);
+    onCreatePost(imageUuid);
     setNewPostText("");
     setNewPostImage(null);
     onClose();
+    setRefetchPosts(refetchPosts => !refetchPosts)
   };
+
+  useEffect(() => {
+    console.log(newPostImage)
+  }, [newPostImage])
 
   return (
     <Modal open={open} onClose={onClose}>

@@ -1,4 +1,4 @@
-import db from "../firebase/firebase";
+import db, { storage } from "../firebase/firebase";
 import CreatePostModal from "../components/CreatePostModal";
 import Sidebar from "../components/Sidebar";
 import TopRightSection from "../components/TopRightSection";
@@ -18,6 +18,8 @@ import {
   where,
 } from "firebase/firestore";
 import { useAuth } from "../contexts/authContext";
+import { getDownloadURL, ref } from "firebase/storage";
+import { getUserDataByEmail } from "../hooks/hooks";
 
 function Home() {
   const navigate = useNavigate();
@@ -26,19 +28,13 @@ function Home() {
   const [user, setUser] = useState();
   const [posts, setPosts] = useState([]);
   const [openModal, setOpenModal] = useState(false);
-
-  const getUserData = async () => {
-    const usersCollection = collection(db, "users");
-    const userQuery = query(usersCollection, where("email", "==", currentUser.email));
-    const querySnapshot = await getDocs(userQuery);
-    return querySnapshot.docs[0].data();
-  };
+  const [refetchPosts, setRefetchPosts] = useState(false);
 
   useEffect(() => {
     // Fetch current user data
     const fetchUserData = async () => {
       try {
-        const userData = await getUserData();
+        const userData = await getUserDataByEmail(currentUser.email);
         setUser(userData); // Set user state with the retrieved data
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -62,12 +58,28 @@ function Home() {
               console.error("Error fetching user data:", error);
             }
           }
+
+          if (postData.imageId) {
+            try {
+              const imageRef = ref(storage, `images/${postData.imageId}`);
+              postData.imageUrl = await getDownloadURL(imageRef);
+            } catch (error) {
+              console.error("Error fetching image URL:", error);
+            }         
+          }
+
           return postData;
         })
       );
-      setPosts(postsWithUsers);
+      setPosts(postsWithUsers.sort((a, b) => b.createdAt - a.createdAt));
     });
-  }, []);
+  }, [refetchPosts]);
+
+  useEffect(() => {
+    console.log(posts)
+    console.log(posts.forEach(post => post.imageUrl))
+
+  }, [posts])
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
@@ -82,7 +94,7 @@ function Home() {
               <Post
                 key={index}
                 name={post?.user?.username && post.user.username}
-                image={post?.image}
+                image={post?.imageUrl}
                 text={post?.text}
                 profilePicture={post?.user?.pfpURL && post?.user?.pfpURL}
               />
@@ -156,6 +168,7 @@ function Home() {
         open={openModal}
         onClose={() => setOpenModal(false)}
         email={currentUser?.email || null}
+        setRefetchPosts={setRefetchPosts}
       />
     </div>
   );
