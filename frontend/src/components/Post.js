@@ -11,10 +11,10 @@ import '../App.css';
 import usePostModule from './PostModule';
 import { useNavigate } from 'react-router-dom';
 import db from "../firebase/firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, getDoc} from "firebase/firestore";
 
 
-export default function Post({ name = "Deleted User", image, text, profilePicture, postId, likeCount : initializeLikeCount = 0}) {
+export default function Post({ name = "Deleted User", image, text, profilePicture, postId }) {
   const {
     liked,
     setLiked,
@@ -28,10 +28,29 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
     handleCommentChange,
     handleSendComment,
   } = usePostModule();
-  const [likeCount, setLikeCount] = useState(initializeLikeCount);
+  const [likeCount, setLikeCount] = useState(0);
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchLikeCount = async () => {
+      try {
+        const likeRef = doc(db, "posts", postId);
+        const likeSnap = await getDoc(likeRef);
+        if (likeSnap.exists()){
+          setLikeCount(likeSnap.data().likeCount || 0);
+        }
+        else{
+          console.error("LikeCount not found in FireStore");
+        }
+      }
+      catch(error){
+        console.error("Error fetching likeCount: ", error);
+      }
+    };
+    fetchLikeCount();
+  },[postId])
+  
   const handleLike = async() => {
     const isLiked = !liked; 
     const newLikeCount = isLiked ? likeCount + 1 : likeCount - 1;

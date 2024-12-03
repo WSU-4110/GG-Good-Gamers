@@ -25,10 +25,10 @@ const usePostModule = () => {
 
 
   const handleLikeClick = async(postId, likeCount) => {
-    if (typeof likeCount !== 'number' || isNaN(likeCount)){
-      console.error("Invalid likeCount: ", likeCount);
-      return;
-    }
+    // if (typeof likeCount !== 'number' || isNaN(likeCount)){
+    //   console.error("Invalid likeCount: ", likeCount);
+    //   return;
+    // }
     try{
       const postRef = doc(db, "posts", postId);
       await updateDoc(postRef, {likeCount});
