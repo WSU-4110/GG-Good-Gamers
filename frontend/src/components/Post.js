@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { IconButton } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -8,54 +8,42 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import '../App.css';
+import usePostModule from './PostModule';
+import { useNavigate } from 'react-router-dom';
 
 export default function Post({ name = "Deleted User", image, text, profilePicture }) {
-  const [liked, setLiked] = useState(false); // State for like button
-  const [favorited, setFavorited] = useState(false); // State for favorite button
-  const [commentVisible, setCommentVisible] = useState(false); // State for comment visibility
-  const [comment, setComment] = useState(""); // State for comment input
-  const [postedComments, setPostedComments] = useState([]); // State for all posted comments
+  const {
+    liked,
+    favorited,
+    commentVisible,
+    setCommentVisible,
+    comment,
+    postedComments,
+    handleLikeClick,
+    handleFavoriteClick,
+    handleCommentChange,
+    handleSendComment,
+  } = usePostModule();
 
-  const handleLikeClick = () => {
-    setLiked((prev) => !prev); // Toggle liked state
-  };
-
-  const handleFavoriteClick = () => {
-    setFavorited((prev) => !prev); // Toggle favorite state
-  };
-
-  const handleCommentChange = (e) => {
-    setComment(e.target.value); // Update comment input
-  };
-
-  const handleSendComment = () => {
-    if (comment) {
-      setPostedComments([...postedComments, { name, text: comment }]); // Add new comment to the list
-      setComment(""); // Clear comment after sending
-    }
-  };
+  const navigate = useNavigate();
 
   return (
     <div className="bg-gray-800 p-6 rounded-lg mb-2">
       {/* Name and Profile Picture */}
-      <div className="flex items-center mb-4">
+      <div className="flex items-center mb-4" onClick={() => navigate(`/profile?username=${name}`)}>
         <img
-          src={profilePicture || 'https://via.placeholder.com/40'} // Use profile picture or placeholder
+          src={profilePicture || 'https://via.placeholder.com/40'}
           alt="Profile"
-          className="rounded-full mr-4"
+          className="cursor-pointer rounded-full mr-4"
           width="40"
         />
-        <h3 className="text-xl font-semibold">{name}</h3>
+        <h3 className="cursor-pointer text-xl font-semibold">{name}</h3>
       </div>
 
       {/* Image with improved styling */}
       {image && (
         <div className="w-full h-72 bg-gray-700 rounded-lg overflow-hidden my-4">
-          <img
-            src={image}
-            alt="Uploaded"
-            className="w-full h-full object-contain"
-          />
+          <img src={image} alt="Uploaded" className="w-full h-full object-contain" />
         </div>
       )}
 
@@ -110,11 +98,11 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
               className="flex-1 px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  handleSendComment();
+                  handleSendComment(name);
                 }
               }}
             />
-            <IconButton onClick={handleSendComment} sx={{ color: 'white' }}>
+            <IconButton onClick={() => handleSendComment(name)} sx={{ color: 'white' }}>
               <SendIcon />
             </IconButton>
           </div>

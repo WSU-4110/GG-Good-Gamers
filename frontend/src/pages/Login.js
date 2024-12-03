@@ -10,6 +10,8 @@ import {
   doSignInWithGoogle,
 } from "../firebase/auth";
 import AxiosInstance from "../components/Axios";
+import db from "../firebase/firebase";
+import { addDoc, collection } from "firebase/firestore";
 
 function Login() {
   const navigate = useNavigate();
@@ -17,6 +19,12 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [dobDay, setDobDay] = useState();
+  const [dobMonth, setDobMonth] = useState();
+  const [dobYear, setDobYear] = useState();
+  const [gender, setGender] = useState();
+
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -47,23 +55,32 @@ function Login() {
       setIsRegistering(true);
       await doCreateUserWithEmailAndPassword(email, password);
     }
-    // AxiosInstance.post('user/',{
-    //   id = 
-    //   userEmail = 
-    //   screenName = 
-    //   userName =
-    //   userPassword = 
-    //   userGender = 
-    //   userDOB = 
-    //   docAcct = 
-    //   isAdmin = 
-    //   isBanned =
-    // }
+
+    const collectionRef = collection(db, "users");
+    const payload = {
+      email: email,
+      username: username,
+      dateOfBirth: new Date(dobYear, dobMonth - 1, dobDay),
+      dateCreated: new Date(),
+      gender: gender,
+    };
+    console.log(payload);
+    await addDoc(collectionRef, payload);
   };
 
   useEffect(() => {
     userLoggedIn && navigate("/home");
   }, [userLoggedIn]);
+
+  useEffect(() => {
+    setEmail("");
+    setPassword("");
+    setUsername("");
+    setDobDay();
+    setDobMonth();
+    setDobYear();
+    setGender();
+  }, [isLogin]);
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -102,6 +119,10 @@ function Login() {
             {/* Email Input */}
             <div className="mb-4 relative">
               <input
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                value={email}
                 type="email"
                 placeholder="Please Enter your Email"
                 className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -114,6 +135,10 @@ function Login() {
             {/* Password Input */}
             <div className="mb-4 relative">
               <input
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+                value={password}
                 type="password"
                 placeholder="Please Enter your Password"
                 className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -132,7 +157,10 @@ function Login() {
 
             {/* Login Button */}
             <div className="mb-2">
-              <button className="w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg">
+              <button
+                onClick={onSignIn}
+                className="w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg"
+              >
                 Login
               </button>
             </div>
@@ -161,6 +189,10 @@ function Login() {
                 type="text"
                 placeholder="Please Enter your Username"
                 className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
+                value={username}
               />
               <div className="absolute left-3 top-3 text-gray-400">
                 <i className="fas fa-user"></i> {/* User Icon */}
@@ -173,6 +205,10 @@ function Login() {
                 type="email"
                 placeholder="Please Enter your Email"
                 className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                value={email}
               />
               <div className="absolute left-3 top-3 text-gray-400">
                 <i className="fas fa-envelope"></i> {/* Email Icon */}
@@ -185,6 +221,10 @@ function Login() {
                 type="password"
                 placeholder="Please Enter your Password"
                 className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+                value={password}
               />
               <div className="absolute left-3 top-3 text-gray-400">
                 <i className="fas fa-lock"></i> {/* Password Icon */}
@@ -195,7 +235,11 @@ function Login() {
             <div className="mb-4">
               <label className="text-gray-400 mb-2 block">Date of Birth</label>
               <div className="flex space-x-4">
-                <select className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg">
+                <select
+                  value={dobDay}
+                  onChange={(e) => setDobDay(e.target.value)}
+                  className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg"
+                >
                   <option value="" disabled selected>
                     Day
                   </option>
@@ -205,7 +249,11 @@ function Login() {
                     </option>
                   ))}
                 </select>
-                <select className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg">
+                <select
+                  onChange={(e) => setDobMonth(e.target.value)}
+                  value={dobMonth}
+                  className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg"
+                >
                   <option value="" disabled selected>
                     Month
                   </option>
@@ -223,12 +271,16 @@ function Login() {
                     "November",
                     "December",
                   ].map((month, i) => (
-                    <option key={i} value={month}>
+                    <option key={i} value={i + 1}>
                       {month}
                     </option>
                   ))}
                 </select>
-                <select className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg">
+                <select
+                  value={dobYear}
+                  onChange={(e) => setDobYear(e.target.value)}
+                  className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg"
+                >
                   <option value="" disabled selected>
                     Year
                   </option>
@@ -243,12 +295,15 @@ function Login() {
 
             {/* Gender Selection */}
             <div className="mb-4 relative">
-              <select className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-purple-500">
+              <select
+                onChange={(e) => setGender(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
                 <option value="" disabled selected>
                   Select your Gender
                 </option>
-                <option>Male</option>
-                <option>Female</option>
+                <option value={"male"}>Male</option>
+                <option value={"female"}>Female</option>
               </select>
               <div className="absolute left-3 top-3 text-gray-400">
                 <i className="fas fa-venus-mars"></i> {/* Gender Icon */}
@@ -256,7 +311,10 @@ function Login() {
             </div>
 
             <div className="mb-6">
-              <button className="w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg">
+              <button
+                className="w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg"
+                onClick={onSignUp}
+              >
                 Sign Up
               </button>
             </div>

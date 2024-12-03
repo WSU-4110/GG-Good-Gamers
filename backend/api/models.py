@@ -33,12 +33,15 @@ class User(models.Model):
         return self.userEmail
     
 class Post(models.Model):
-   user = models.ForeignKey(User, on_delete=models.CASCADE)
-   postID = models.IntegerField(unique = True, primary_key = True, default = (random.randint(0,9999999999)))
+   user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+   postID = models.BigAutoField(primary_key = True)
+   userName = models.CharField(max_length= 25, null = True)
+   postDescription = models.CharField(max_length=2000, null=True)
+   postContent = models.CharField(max_length=500, null=True)
    created = models.DateTimeField(auto_now_add=True)
    comments = models.CharField(max_length=500, blank=True, null=True)
    likeCount = models.IntegerField(default = 0) 
-   dislikeCount = models.IntegerField(default = 0)
+   userPfp = models.CharField(max_length=500, null=True)
    #postURL = models.ImageField(upload_to = "uploads/")
    class Meta:
         ordering = ['user']
