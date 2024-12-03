@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { doc, 
   updateDoc, 
   arrayUnion,
-  getDocs,
+  getDoc,
   collection } from "firebase/firestore";
 import db from "../firebase/firebase";
 import { IconButton, 
@@ -25,10 +25,6 @@ const usePostModule = () => {
 
 
   const handleLikeClick = async(postId, likeCount) => {
-    // if (typeof likeCount !== 'number' || isNaN(likeCount)){
-    //   console.error("Invalid likeCount: ", likeCount);
-    //   return;
-    // }
     try{
       const postRef = doc(db, "posts", postId);
       await updateDoc(postRef, {likeCount});
@@ -48,22 +44,20 @@ const usePostModule = () => {
     setComment(e.target.value);
   };
 
-  const handleSendComment = async (postId, name) => { //put comment request here
-    console.log(postId, name)
-    if (comment) {
+  const handleSendComment = async (postId, senderName) => { //put comment request here
+    if (comment.trim()) {
       try{
         const user = await getUserDataByEmail(currentUser.email);
         const postRef = doc(db,"posts", postId);
-        await updateDoc(postRef, {
-          comments: arrayUnion({
-            username: user.username,
-            text: comment,
-            createdAt: new Date(),
-          }),
+        const newComment = {
+          username: user.username,
+          text : comment,
+          createdAt: new Date().toISOString(),
+        };
+        await updateDoc(postRef, {comments: arrayUnion({newComment}),
         });
         setComment("");
-        const fetchedComments = await fetchAllComments();
-        setPostedComments( fetchedComments);
+        fetchAllComments(postId);
         console.log("Comment added successfully to Firestore");
       }
       catch(error){
@@ -72,23 +66,21 @@ const usePostModule = () => {
     }
   };
 
-  const fetchAllComments = async()=>{
+  const fetchAllComments = async(postId)=>{
     try{
-      const postCollection = collection(db,"posts");
-      const querySnapshot = await getDocs(postCollection);
-      console.log("Total posts fetched:", querySnapshot.docs.length);
-
-      
-      const comments = querySnapshot.docs.map((doc)=>({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      return comments;
+      const commentRef = doc(db,"posts", postId);
+      const commentSnap = await getDoc(commentRef);
+      if(commentSnap.exists()){
+        const commentData = commentSnap.data();
+        setPostedComments(commentData.comments || []);
+        console.log("Comments fetched successfully");
+      }
+      else{
+        console.error("Post not found");
+      }
     }
     catch(error){
       console.error("Error fetching comments: ", error);
-      return [];
     }
   };
 

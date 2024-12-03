@@ -50,7 +50,7 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
     };
     fetchLikeCount();
   },[postId])
-  
+
   const handleLike = async() => {
     const isLiked = !liked; 
     const newLikeCount = isLiked ? likeCount + 1 : likeCount - 1;
@@ -90,7 +90,8 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
         <div className="flex space-x-4">
         <IconButton onClick={handleLike}>              {/* LLOOK HERE*/}
           <FavoriteIcon color={liked ? "error" : "default"} />
-          <Typography variant="caption">{likeCount || 0}</Typography>
+          <Typography variant="caption" style ={{color: 'white'}}>
+            {likeCount || 0} </Typography>
         </IconButton>
           {/* <IconButton onClick={handleLikeClick} sx={{ color: liked ? '#9b5de5' : 'white' }}>
             {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
@@ -119,12 +120,12 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
             <div className="mb-4">
               {postedComments.map((c, idx) => (
                 <p key={idx} className="text-left text-white">
-                  <span className="font-semibold">{c.name}</span> {c.text}
+                  <span className="font-semibold">{c.username}</span> {c.text}
                 </p>
               ))}
             </div>
           )}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 mt-2">
             <input
               type="text"
               value={comment}
