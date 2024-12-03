@@ -1,7 +1,12 @@
 import { useState } from 'react';
-import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, 
+  updateDoc, 
+  arrayUnion,
+  getDocs,
+  collection } from "firebase/firestore";
 import db from "../firebase/firebase";
-import { IconButton, Typography } from "@mui/material";
+import { IconButton, 
+  Typography } from "@mui/material";
 import React from "react";
 import { useAuth } from '../contexts/authContext';
 import { getUserDataByEmail } from '../hooks/hooks';
@@ -15,6 +20,7 @@ const usePostModule = () => {
   const [commentVisible, setCommentVisible] = useState(false);
   const [comment, setComment] = useState("");
   const [postedComments, setPostedComments] = useState([]);
+  //const [posts, setPosts] = useState([]);
 
   const handleLikeClick = async(postId, currentLikeCount) => {
     const newLikeCount = liked ? currentLikeCount - 1 : currentLikeCount + 1;
@@ -38,6 +44,7 @@ const usePostModule = () => {
   };
 
   const handleSendComment = async (postId, name) => { //put comment request here
+    console.log(postId, name)
     if (comment) {
       try{
         const user = await getUserDataByEmail(currentUser.email);
@@ -49,13 +56,34 @@ const usePostModule = () => {
             createdAt: new Date(),
           }),
         });
-        setPostedComments([...postedComments, { name, text: comment }]);
         setComment("");
+        const fetchedComments = await fetchAllComments();
+        setPostedComments( fetchedComments);
         console.log("Comment added successfully to Firestore");
       }
       catch(error){
         console.error("Error adding comment: ", error);
       }
+    }
+  };
+
+  const fetchAllComments = async()=>{
+    try{
+      const postCollection = collection(db,"posts");
+      const querySnapshot = await getDocs(postCollection);
+      console.log("Total posts fetched:", querySnapshot.docs.length);
+
+      
+      const comments = querySnapshot.docs.map((doc)=>({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      return comments;
+    }
+    catch(error){
+      console.error("Error fetching comments: ", error);
+      return [];
     }
   };
 
