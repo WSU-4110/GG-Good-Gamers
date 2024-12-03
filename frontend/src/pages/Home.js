@@ -19,6 +19,7 @@ import {
 } from "firebase/firestore";
 import { useAuth } from "../contexts/authContext";
 import { getDownloadURL, ref } from "firebase/storage";
+import { getUserDataByEmail } from "../hooks/hooks";
 
 function Home() {
   const navigate = useNavigate();
@@ -29,18 +30,11 @@ function Home() {
   const [openModal, setOpenModal] = useState(false);
   const [refetchPosts, setRefetchPosts] = useState(false);
 
-  const getUserData = async () => {
-    const usersCollection = collection(db, "users");
-    const userQuery = query(usersCollection, where("email", "==", currentUser.email));
-    const querySnapshot = await getDocs(userQuery);
-    return querySnapshot.docs[0].data();
-  };
-
   useEffect(() => {
     // Fetch current user data
     const fetchUserData = async () => {
       try {
-        const userData = await getUserData();
+        const userData = await getUserDataByEmail(currentUser.email);
         setUser(userData); // Set user state with the retrieved data
       } catch (error) {
         console.error("Error fetching user data:", error);
