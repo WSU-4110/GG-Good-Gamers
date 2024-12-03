@@ -47,6 +47,7 @@ function Home() {
       const postsWithUsers = await Promise.all(
         snapshot.docs.map(async (docSnapshot) => {
           let postData = docSnapshot.data();
+          postData.id = docSnapshot.id;
 
           if (postData.userRef) {
             try {
@@ -75,12 +76,6 @@ function Home() {
     });
   }, [refetchPosts]);
 
-  useEffect(() => {
-    console.log(posts)
-    console.log(posts.forEach(post => post.imageUrl))
-
-  }, [posts])
-
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
       {/* Left Sidebar */}
@@ -97,6 +92,7 @@ function Home() {
                 image={post?.imageUrl}
                 text={post?.text}
                 profilePicture={post?.user?.pfpURL && post?.user?.pfpURL}
+                postId={post?.id}
               />
             </>
           ))}

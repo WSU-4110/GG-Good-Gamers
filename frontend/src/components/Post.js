@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton } from '@mui/material';
+import { IconButton, Typography } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -10,8 +10,11 @@ import ShareIcon from '@mui/icons-material/Share';
 import '../App.css';
 import usePostModule from './PostModule';
 import { useNavigate } from 'react-router-dom';
+import db from "../firebase/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
-export default function Post({ name = "Deleted User", image, text, profilePicture }) {
+
+export default function Post({ name = "Deleted User", image, text, profilePicture, postId, likeCount }) {
   const {
     liked,
     favorited,
@@ -57,9 +60,14 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
       {/* Icons (Like, Comment, Share, Bookmark) */}
       <div className="flex justify-between items-center mt-4">
         <div className="flex space-x-4">
-          <IconButton onClick={handleLikeClick} sx={{ color: liked ? '#9b5de5' : 'white' }}>
+        <IconButton onClick={() => handleLikeClick(postId, likeCount)}>              {/* LLOOK HERE*/}
+          <FavoriteIcon color={liked ? "error" : "default"} />
+          <Typography variant="caption">{likeCount}</Typography>
+        </IconButton>
+
+          {/* <IconButton onClick={handleLikeClick} sx={{ color: liked ? '#9b5de5' : 'white' }}>
             {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-          </IconButton>
+          </IconButton> */}
           <IconButton
             onClick={() => setCommentVisible(!commentVisible)}
             sx={{ color: 'white' }}
@@ -98,11 +106,11 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
               className="flex-1 px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  handleSendComment(name);
+                  handleSendComment(postId, name);
                 }
               }}
             />
-            <IconButton onClick={() => handleSendComment(name)} sx={{ color: 'white' }}>
+            <IconButton onClick={() => handleSendComment(postId, name)} sx={{ color: 'white' }}>
               <SendIcon />
             </IconButton>
           </div>

@@ -45,8 +45,8 @@ export default function Rsidebar ({ currentuser }){
               </div>
               <button className="bg-purple-500 px-3 py-1 rounded-lg">
                 Follow
-              </button>
-            </div>
+               </button> {/*need an onClick funtion here to change when button is pressed */}
+            </div> 
             <div className="flex justify-between items-center bg-gray-700 p-2 rounded-lg">
               <div className="flex items-center space-x-2">
                 <img
