@@ -1,15 +1,15 @@
-import db from "../firebase/firebase";
-import CreatePostModal from "../components/CreatePostModal";
-import Sidebar from "../components/Sidebar";
-import TopRightSection from "../components/TopRightSection";
+import db from "../firebase/firebase.js";
+import CreatePostModal from '../components/CreatePostModal.js';
+import Sidebar from '../components/Sidebar.js';
+import TopRightSection from '../components/TopRightSection.js'; 
 import React, { useEffect, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome for icons
 import "../App.css"; // Ensure global styles are included
-import { useAuth } from "../contexts/authContext";
+import { useAuth } from "../contexts/authContext/index.js";
 import { useNavigate } from "react-router-dom";
-import Post from "../components/Post";
-import AxiosInstance from "../components/Axios";
-import { collection, getDoc, onSnapshot } from "firebase/firestore";
+import Post from "../components/Post.js";
+import AxiosInstance from "../components/Axios.js";
+import { collection, getDoc, onSnapshot } from "firebase/firestore.js";
 
 function Home() {
   const navigate = useNavigate();

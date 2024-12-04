@@ -1,14 +1,14 @@
-import CreatePostModal from "../components/CreatePostModal";
-import Sidebar from "../components/Sidebar";
-import TopRightSection from "../components/TopRightSection";
+import CreatePostModal from "../components/CreatePostModal.js";
+import Sidebar from "../components/Sidebar.js";
+import TopRightSection from "../components/TopRightSection.js";
 import React, { useEffect, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome for icons
 import "../App.css"; // Ensure global styles are included
-import { useAuth } from "../contexts/authContext";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import Post from "../components/Post";
-import AxiosInstance from "../components/Axios";
+import { useNavigate } from "react-router-dom";
+import Post from "../components/Post.js";
+import AxiosInstance from "../components/Axios.js";
 import { Box, Grid, Grid2, Paper, Stack, Typography } from "@mui/material";
+import { useAuth } from "../contexts/authContext/index.js";
 
 function Profile() {
   const [searchParams] = useSearchParams();

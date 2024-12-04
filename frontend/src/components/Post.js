@@ -8,7 +8,7 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import '../App.css';
-import usePostModule from './PostModule';
+import usePostModule from './PostModule.js';
 
 export default function Post({ name = "Deleted User", image, text, profilePicture }) {
   const {

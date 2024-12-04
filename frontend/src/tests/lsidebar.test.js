@@ -1,6 +1,24 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import Sidebar from "../components/Sidebar";
+jest.mock("../contexts/authContext/index.js", () => ({
+  useAuth: jest.fn(),
+}));
+
+const mockSignOut = jest.fn();
+jest.mock("../firebase/auth.js", () => ({
+  doSignOut: mockSignOut,
+}));
+
+jest.mock("@fortawesome/react-fontawesome", () => ({
+  FontAwesomeIcon: () => <span />,
+}));
+
+const mockNavigate = jest.fn();
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useNavigate: () => mockNavigate,
+}));
 describe("left sidebar Component", () => {
   // Test to check if the logo  renders correctly
   render(
