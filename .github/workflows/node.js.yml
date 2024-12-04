@@ -23,6 +23,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: cd frontend
     - run: rm -rf package-lock.json node_modules
     - run: npm install jest --save-dev
     - run: npm install @babel/preset-react --save-dev
@@ -35,5 +36,4 @@ jobs:
     - run: npm install firebase
     - run: npm ci
     - run: npm run build --if-present
-    - run: cd frontend
     - run: npm test
