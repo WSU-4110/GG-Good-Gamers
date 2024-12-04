@@ -9,6 +9,7 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import '../App.css';
 import usePostModule from './PostModule';
+import { useNavigate } from 'react-router-dom';
 
 export default function Post({ name = "Deleted User", image, text, profilePicture }) {
   const {
@@ -43,17 +44,19 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
     handleSendComment, 
   } = usePostModule();
 
+  const navigate = useNavigate();
+
   return (
     <div className="bg-gray-800 p-6 rounded-lg mb-2">
-      {/* Displays the user's name and profile picture */}
-      <div className="flex items-center mb-4">
+      {/* Name and Profile Picture */}
+      <div className="flex items-center mb-4" onClick={() => navigate(`/profile?username=${name}`)}>
         <img
           src={profilePicture || 'https://via.placeholder.com/40'}
           alt="Profile"
-          className="rounded-full mr-4"
+          className="cursor-pointer rounded-full mr-4"
           width="40"
         />
-        <h3 className="text-xl font-semibold">{name}</h3>
+        <h3 className="cursor-pointer text-xl font-semibold">{name}</h3>
       </div>
 
       {/* Displays an image if one is provided */}

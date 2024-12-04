@@ -9,13 +9,12 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { db } from "../firebase/firebase";
+import  db  from "../firebase/firebase";
 import Sidebar from "../components/Sidebar";
 import TopRightSection from "../components/TopRightSection";
 import { IconButton, TextField, Avatar, Badge } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import SearchIcon from "@mui/icons-material/Search";
-import ChatIcon from "@mui/icons-material/Chat";
 
 const Messages = () => {
   const auth = getAuth();
@@ -86,7 +85,7 @@ const Messages = () => {
     setSearchQuery(query);
     if (query.trim()) {
       const results = users.filter((user) =>
-        user.username.toLowerCase().includes(query.toLowerCase())
+        user.username?.toLowerCase().includes(query.toLowerCase())
       );
       setSearchResults(results);
     } else {
@@ -100,9 +99,9 @@ const Messages = () => {
       <Sidebar />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="ml-24 flex-1 flex flex-col">
         <div className="flex justify-end p-4">
-          <TopRightSection setOpenModal={() => {}} />
+          <TopRightSection />
         </div>
 
         <div className="flex-1 flex px-8 pb-8 space-x-4">

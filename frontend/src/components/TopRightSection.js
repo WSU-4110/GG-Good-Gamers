@@ -28,10 +28,11 @@ function TopRightSection({ setOpenModal, currentUser }) {
       {/* User Profile */}
       {currentUser ? (
         <img
-          src={currentUser?.photoURL || 'https://via.placeholder.com/40'}
+          src={currentUser?.pfpURL || 'https://via.placeholder.com/40'}
           alt="User Profile"
           className="rounded-full cursor-pointer"
           width="40px"
+          onClick={() => navigate('/profile')}
         />
       ) : (
         <div>Loading...</div>
