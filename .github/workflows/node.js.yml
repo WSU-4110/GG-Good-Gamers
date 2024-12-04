@@ -57,6 +57,7 @@ jobs:
     - run: npm install react@18.3.1
     - run: npm install tailwindcss@3.4.13
     - run: npm install uuid@11.0.3
+    - run: npm install node-fetch
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
