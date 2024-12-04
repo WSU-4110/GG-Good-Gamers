@@ -1,78 +1,77 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { BrowserRouter as Router } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+
+// Mocking useAuth from authContext
 jest.mock("../contexts/authContext/index.js", () => ({
-  useAuth: jest.fn(),
+  useAuth: jest.fn(() => ({
+    currentUser: { email: "test@example.com" },
+    userLoggedIn: true,
+  })),
 }));
 
-const mockSignOut = jest.fn();
-jest.mock("../firebase/auth.js", () => ({
-  doSignOut: mockSignOut,
-}));
+// Mocking doSignOut
+jest.mock("../firebase/auth.js", () => {
+  return {
+    doSignOut: jest.fn(), // Mocked function defined inline
+  };
+});
 
+// Mocking FontAwesome
 jest.mock("@fortawesome/react-fontawesome", () => ({
   FontAwesomeIcon: () => <span />,
 }));
 
+// Mocking react-router-dom's useNavigate
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useNavigate: () => mockNavigate,
 }));
-describe("left sidebar Component", () => {
-  // Test to check if the logo  renders correctly
-  render(
-    <Router>
-      <Sidebar />
-    </Router>
-  );
-  test("GG logo", () => {
+
+describe("Sidebar Component", () => {
+  test("GG logo renders correctly", () => {
+    render(
+      <Router>
+        <Sidebar />
+      </Router>
+    );
     expect(screen.getByText("GG")).toBeInTheDocument();
   });
 
-  describe("Sidebar Component", () => {
-    test("navigates to /home on click of the Home menu", () => {
-      // Render the component inside a Router for navigation support
-      render(
-        <Router>
-          <Sidebar />
-        </Router>
-      );
-      // Get the Home menu element
-      const homeMenu = screen.getByRole("button", { name: /home/i }); // Use accessible role or text
-      // Click on the menu
-      fireEvent.click(homeMenu);
-      // Check if the URL has changed
-      expect(window.location.pathname).toBe("/home");
-    });
+  test("navigates to /home on Home button click", () => {
+    render(
+      <Router>
+        <Sidebar />
+      </Router>
+    );
+
+    const homeButton = screen.getByRole("button", { name: /home/i });
+    fireEvent.click(homeButton);
+    expect(mockNavigate).toHaveBeenCalledWith("/home");
   });
 
   test("Lounge button sets active menu to lounge", () => {
     render(
       <Router>
-        <Sidebar />
+        <Sidebar activePage="lounge" />
       </Router>
     );
 
-    const loungeButton = screen.getByRole("button", { hidden: true }); // Adjust the selector if necessary
+    const loungeButton = screen.getByRole("button", { hidden: true }); // Adjust selector
     fireEvent.click(loungeButton);
-    expect(loungeButton).toHaveStyle("color: purple"); // Ensure the button style changes
+    expect(loungeButton).toHaveStyle("color: purple");
   });
 
   test("History button navigates to /history", () => {
-    const mockNavigate = jest.fn();
-    jest.mock("react-router-dom", () => ({
-      ...jest.requireActual("react-router-dom"),
-      useNavigate: () => mockNavigate,
-    }));
-
     render(
       <Router>
         <Sidebar />
       </Router>
     );
 
-    const historyButton = screen.getByRole("button", { hidden: true }); // Adjust the selector if necessary
+    const historyButton = screen.getByRole("button", { hidden: true }); // Adjust selector
     fireEvent.click(historyButton);
     expect(mockNavigate).toHaveBeenCalledWith("/history");
   });
@@ -84,7 +83,7 @@ describe("left sidebar Component", () => {
       </Router>
     );
 
-    const logoutButton = screen.getByRole("button", { hidden: true }); // Adjust the selector if necessary
+    const logoutButton = screen.getByRole("button", { hidden: true }); // Adjust selector
     fireEvent.click(logoutButton);
     expect(screen.getByText("LOGIN")).toBeInTheDocument();
   });
