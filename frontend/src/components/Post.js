@@ -14,7 +14,7 @@ import db from "../firebase/firebase";
 import { doc, updateDoc, getDoc} from "firebase/firestore";
 
 
-export default function Post({ name = "Deleted User", image, text, profilePicture, postId }) {
+export default function Post({ name = "Deleted User", image, text, profilePicture, comments, postId }) {
   const {
     liked,
     setLiked,
@@ -89,13 +89,10 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
       <div className="flex justify-between items-center mt-4">
         <div className="flex space-x-4">
         <IconButton onClick={handleLike}>              {/* LLOOK HERE*/}
-          <FavoriteIcon color={liked ? "error" : "default"} />
+          <FavoriteIcon sx={{color: liked ? "#9b5de5" : "white"}} />
           <Typography variant="caption" style ={{color: 'white'}}>
             {likeCount || 0} </Typography>
         </IconButton>
-          {/* <IconButton onClick={handleLikeClick} sx={{ color: liked ? '#9b5de5' : 'white' }}>
-            {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-          </IconButton> */}
           <IconButton
             onClick={() => setCommentVisible(!commentVisible)}
             sx={{ color: 'white' }}
@@ -116,11 +113,11 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
       {/* Comments Section */}
       {commentVisible && (
         <div className="mt-4">
-          {postedComments.length > 0 && (
+          {comments?.length > 0 && (
             <div className="mb-4">
-              {postedComments.map((c, idx) => (
+              {comments.map((c, idx) => (
                 <p key={idx} className="text-left text-white">
-                  <span className="font-semibold">{c.username}</span> {c.text}
+                  <span className="font-semibold">{c.newComment.username}</span> {c.newComment.text}
                 </p>
               ))}
             </div>

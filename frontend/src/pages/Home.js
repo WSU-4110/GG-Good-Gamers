@@ -76,6 +76,11 @@ function Home() {
     });
   }, [refetchPosts]);
 
+  useEffect(()=>{
+    console.log(posts);
+  },[posts])
+
+
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
       {/* Left Sidebar */}
@@ -90,6 +95,7 @@ function Home() {
                 key={index}
                 name={post?.user?.username && post.user.username}
                 image={post?.imageUrl}
+                comments = {post?.comments}
                 text={post?.text}
                 profilePicture={post?.user?.pfpURL && post?.user?.pfpURL}
                 postId={post?.id}
