@@ -8,7 +8,7 @@
   },
   {
   "presets": ["@babel/preset-env"]
-},
+  },
   "scripts": {
     "test": "jest"
   }
