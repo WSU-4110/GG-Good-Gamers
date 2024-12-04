@@ -30,6 +30,7 @@ jobs:
     - run: npm install @fortawesome/react-fontawesome --save-dev
     - run: npm install @emotion/styled --save-dev
     - run: npm install react-router-dom --save-dev
+    - run: npm install @testing-library/jest-dom --save-dev
     - run: npm ci
     - run: npm run build --if-present
     - run: cd frontend
