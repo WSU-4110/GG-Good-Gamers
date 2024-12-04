@@ -44,18 +44,20 @@ const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
     // }
     // await setDoc(docRef, payload);
 
-    const usersCollection = collection(db, "users");
-    const userQuery = query(usersCollection, where("email", "==", email));
-    const querySnapshot = await getDocs(userQuery);
-    const userDoc = querySnapshot.docs[0];
+    const usersCollection = collection(db, "users"); //user db
+    const userQuery = query(usersCollection, where("email", "==", email)); //asks
+    const querySnapshot = await getDocs(userQuery); //returns array of all user info
+    const userDoc = querySnapshot.docs[0];  //pulls first user by email
 
     const collectionRef = collection(db, "posts");
     const userRef = doc(db, "users", userDoc.id);
-    const payload = {
+    const payload = { 
       userRef: userRef,
       text: newPostText,
       createdAt: new Date(),
       imageId: imageUuid,
+      likeCount: 0,
+      comments:[],
     };
     await addDoc(collectionRef, payload);
   };
@@ -77,10 +79,6 @@ const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
     onClose();
     setRefetchPosts(refetchPosts => !refetchPosts)
   };
-
-  useEffect(() => {
-    console.log(newPostImage)
-  }, [newPostImage])
 
   return (
     <Modal open={open} onClose={onClose}>

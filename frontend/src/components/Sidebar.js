@@ -91,7 +91,9 @@ function Sidebar({ activePage }) {
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === 'settings' ? 'bg-gray-700 text-purple-500' : 'text-gray-400'
           }`}
-          onClick={() => setActiveMenu('settings')}
+          onClick={() => {setActiveMenu('settings')
+            navigate('/history')}
+          }
         >
           <i className="fas fa-cog text-2xl transition-transform duration-300 transform hover:scale-125"></i>
         </div>
