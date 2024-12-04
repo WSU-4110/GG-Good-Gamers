@@ -8,6 +8,6 @@
     "@mui/icons-material": "^6.1.5"
   },
   "scripts": {
-    "test": "jest --roots=frontend/src"
+    "test": "jest --roots=frontend"
   }
 }
