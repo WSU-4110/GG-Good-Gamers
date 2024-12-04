@@ -76,9 +76,6 @@ function Home() {
     });
   }, [refetchPosts]);
 
-  useEffect(()=>{
-    console.log(posts);
-  },[posts])
 
 
   return (
