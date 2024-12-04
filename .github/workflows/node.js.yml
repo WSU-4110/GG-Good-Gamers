@@ -27,6 +27,8 @@ jobs:
     - run: npm install jest --save-dev
     - run: npm install @babel/preset-react --save-dev
     - run: npm install @testing-library/react --save-dev
+    - run: npm install @fortawesome/react-fontawesome --save-dev
+    - run: npm install @emotion/styled --save-dev
     - run: npm install
     - run: npm ci
     - run: npm run build --if-present
