@@ -9,13 +9,13 @@ function Sidebar({ activePage }) {
   const [activeMenu, setActiveMenu] = useState(activePage);
 
   const onSignOut = (e) => {
-    console.log("div clicked")
+    console.log("div clicked");
     setActiveMenu("logout");
     e.preventDefault();
     if (userLoggedIn) {
       doSignOut();
     }
-    navigate('/')
+    navigate("/");
   };
 
   useEffect(() => {
@@ -34,6 +34,7 @@ function Sidebar({ activePage }) {
       {/* Navigation */}
       <nav className="flex flex-col space-y-6">
         <div
+          data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "home"
               ? "bg-gray-700 text-purple-500"
@@ -49,6 +50,7 @@ function Sidebar({ activePage }) {
         </div>
 
         <div
+          data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "explore"
               ? "bg-gray-700 text-purple-500"
@@ -61,6 +63,7 @@ function Sidebar({ activePage }) {
         </div>
 
         <div
+          data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "lounge"
               ? "bg-gray-700 text-purple-500"
@@ -76,6 +79,7 @@ function Sidebar({ activePage }) {
         </div>
 
         <div
+          data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "friends"
               ? "bg-gray-700 text-purple-500"
@@ -88,6 +92,7 @@ function Sidebar({ activePage }) {
         </div>
 
         <div
+          data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "history"
               ? "bg-gray-700 text-purple-500"
@@ -105,26 +110,29 @@ function Sidebar({ activePage }) {
         <hr className="border-gray-600 my-4 w-full" />
 
         <div
+          data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "settings"
               ? "bg-gray-700 text-purple-500"
               : "text-gray-400"
           }`}
-          onClick={() => {setActiveMenu("settings")
-            navigate('/history')}
-          }
+          onClick={() => {
+            setActiveMenu("settings");
+            navigate("/history");
+          }}
           aria-label="Settings"
         >
           <i className="fas fa-cog text-2xl transition-transform duration-300 transform hover:scale-125"></i>
         </div>
 
         <div
+          data-testid="button"
           className={`p-3 mt-auto rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "logout"
               ? "bg-gray-700 text-purple-500"
               : "text-gray-400"
           }`}
-          onClick={() => navigate('/')}
+          onClick={() => navigate("/")}
           aria-label="Logout"
         >
           <i className="fas fa-sign-out-alt text-2xl transition-transform duration-300 transform hover:scale-125"></i>

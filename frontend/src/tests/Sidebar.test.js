@@ -41,7 +41,7 @@ describe("Sidebar Component", () => {
         <Sidebar activePage="home" />
       </MemoryRouter>
     );
-    const menuItems = screen.getAllByRole("button");
+    const menuItems = screen.getAllByTestId("button");
     expect(menuItems).toHaveLength(7);
 
     const activeMenu = menuItems[0];
