@@ -1,5 +1,5 @@
-import React from 'react';
-import { IconButton } from '@mui/material';
+import React, {useState, useEffect} from 'react';
+import { IconButton, Typography } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -8,11 +8,16 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import '../App.css';
-import usePostModule from './PostModule.js';
+import usePostModule from './PostModule';
+import { useNavigate } from 'react-router-dom';
+import db from "../firebase/firebase";
+import { doc, updateDoc, getDoc} from "firebase/firestore";
 
-export default function Post({ name = "Deleted User", image, text, profilePicture }) {
+
+export default function Post({ name = "Deleted User", image, text, profilePicture, comments, postId }) {
   const {
     liked,
+    setLiked,
     favorited,
     commentVisible,
     setCommentVisible,
@@ -23,18 +28,47 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
     handleCommentChange,
     handleSendComment,
   } = usePostModule();
+  const [likeCount, setLikeCount] = useState(0);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchLikeCount = async () => {
+      try {
+        const likeRef = doc(db, "posts", postId);
+        const likeSnap = await getDoc(likeRef);
+        if (likeSnap.exists()){
+          setLikeCount(likeSnap.data().likeCount || 0);
+        }
+        else{
+          console.error("LikeCount not found in FireStore");
+        }
+      }
+      catch(error){
+        console.error("Error fetching likeCount: ", error);
+      }
+    };
+    fetchLikeCount();
+  },[postId])
+
+  const handleLike = async() => {
+    const isLiked = !liked; 
+    const newLikeCount = isLiked ? likeCount + 1 : likeCount - 1;
+    setLikeCount(newLikeCount);
+    setLiked(isLiked);
+    await handleLikeClick(postId, newLikeCount);
+  };
   return (
     <div className="bg-gray-800 p-6 rounded-lg mb-2">
       {/* Name and Profile Picture */}
-      <div className="flex items-center mb-4">
+      <div className="flex items-center mb-4" onClick={() => navigate(`/profile?username=${name}`)}>
         <img
           src={profilePicture || 'https://via.placeholder.com/40'}
           alt="Profile"
-          className="rounded-full mr-4"
+          className="cursor-pointer rounded-full mr-4"
           width="40"
         />
-        <h3 className="text-xl font-semibold">{name}</h3>
+        <h3 className="cursor-pointer text-xl font-semibold">{name}</h3>
       </div>
 
       {/* Image with improved styling */}
@@ -54,9 +88,11 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
       {/* Icons (Like, Comment, Share, Bookmark) */}
       <div className="flex justify-between items-center mt-4">
         <div className="flex space-x-4">
-          <IconButton onClick={handleLikeClick} sx={{ color: liked ? '#9b5de5' : 'white' }}>
-            {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-          </IconButton>
+        <IconButton onClick={handleLike}>              {/* LLOOK HERE*/}
+          <FavoriteIcon sx={{color: liked ? "#9b5de5" : "white"}} />
+          <Typography variant="caption" style ={{color: 'white'}}>
+            {likeCount || 0} </Typography>
+        </IconButton>
           <IconButton
             onClick={() => setCommentVisible(!commentVisible)}
             sx={{ color: 'white' }}
@@ -77,16 +113,16 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
       {/* Comments Section */}
       {commentVisible && (
         <div className="mt-4">
-          {postedComments.length > 0 && (
+          {comments?.length > 0 && (
             <div className="mb-4">
-              {postedComments.map((c, idx) => (
+              {comments.map((c, idx) => (
                 <p key={idx} className="text-left text-white">
-                  <span className="font-semibold">{c.name}</span> {c.text}
+                  <span className="font-semibold">{c.newComment.username}</span> {c.newComment.text}
                 </p>
               ))}
             </div>
           )}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 mt-2">
             <input
               type="text"
               value={comment}
@@ -95,11 +131,11 @@ export default function Post({ name = "Deleted User", image, text, profilePictur
               className="flex-1 px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  handleSendComment(name);
+                  handleSendComment(postId, name);
                 }
               }}
             />
-            <IconButton onClick={() => handleSendComment(name)} sx={{ color: 'white' }}>
+            <IconButton onClick={() => handleSendComment(postId, name)} sx={{ color: 'white' }}>
               <SendIcon />
             </IconButton>
           </div>

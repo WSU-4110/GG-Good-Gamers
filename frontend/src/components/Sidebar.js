@@ -110,7 +110,9 @@ function Sidebar({ activePage }) {
               ? "bg-gray-700 text-purple-500"
               : "text-gray-400"
           }`}
-          onClick={() => setActiveMenu("settings")}
+          onClick={() => {setActiveMenu("settings")
+            navigate('/history')}
+          }
           aria-label="Settings"
         >
           <i className="fas fa-cog text-2xl transition-transform duration-300 transform hover:scale-125"></i>
