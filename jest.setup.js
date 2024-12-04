@@ -9,6 +9,8 @@ global.ReadableStream = require('stream').Readable;
 
 // If you use node-fetch in your code, polyfill it too
 global.fetch = require('node-fetch');
+global.Response = fetch.Response;  // Mock the Response object
+
 
 // Mock the Firebase Analytics module to prevent errors during testing
 jest.mock('firebase/analytics', () => ({
