@@ -8,9 +8,9 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import '../App.css';
-import usePostModule from './PostModule';
+import usePostModule from './PostModule.js';
 import { useNavigate } from 'react-router-dom';
-import db from "../firebase/firebase";
+import db from "../firebase/firebase.js";
 import { doc, updateDoc, getDoc} from "firebase/firestore";
 
 

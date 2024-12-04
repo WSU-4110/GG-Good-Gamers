@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faSignOutAlt, faSearch } from "@fortawesome/free-solid-svg-icons";
-import Lsidebar from "../components/lsidebar";
-import ViewedPostPost from "../components/ViewedPost"; // Child component
-import { useAuth } from "../contexts/authContext";
-import RighSideBar from "../components/RightSideBar";
+import Lsidebar from "../components/lsidebar.js";
+import ViewedPostPost from "../components/ViewedPost.js"; // Child component
+import { useAuth } from "../contexts/authContext/index.js";
+import RighSideBar from "../components/RightSideBar.js";
 import { useNavigate } from "react-router-dom"; // For navigation
-import Sidebar from "../components/Sidebar";
-import TopRightSection from "../components/TopRightSection";
-import HistoryRidebar from "../components/RightSideBar";
+import Sidebar from "../components/Sidebar.js";
+import TopRightSection from "../components/TopRightSection.js";
+import HistoryRidebar from "../components/RightSideBar.js";
 
 function History() {
   const { currentUser } = useAuth();

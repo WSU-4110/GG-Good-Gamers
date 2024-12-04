@@ -2,15 +2,14 @@ import React, { useEffect, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/authContext";
-import Button from "@mui/material/Button";
+import { useAuth } from "../contexts/authContext/index.js";
+import { Button } from "@mui/material";
 import {
   doCreateUserWithEmailAndPassword,
   doSignInWithEmailAndPassword,
   doSignInWithGoogle,
-} from "../firebase/auth";
-import AxiosInstance from "../components/Axios";
-import db from "../firebase/firebase";
+} from "../firebase/auth.js";
+import db from "../firebase/firebase.js";
 import { addDoc, collection } from "firebase/firestore";
 
 function Login() {
