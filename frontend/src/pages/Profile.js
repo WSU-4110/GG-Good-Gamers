@@ -2,89 +2,54 @@ import CreatePostModal from "../components/CreatePostModal";
 import Sidebar from "../components/Sidebar";
 import TopRightSection from "../components/TopRightSection";
 import React, { useEffect, useState } from "react";
-import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome for icons
-import "../App.css"; // Ensure global styles are included
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "../App.css";
 import { useAuth } from "../contexts/authContext";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import Post from "../components/Post";
-import AxiosInstance from "../components/Axios";
-import { Box, Grid, Grid2, Paper, Stack, Typography } from "@mui/material";
-import { getUserDataByEmail, getUserDataByUsername } from "../hooks/hooks";
+import { useSearchParams } from "react-router-dom";
+import { Grid2, Stack } from "@mui/material";
+import {
+  getPostsByUsername,
+  getUserDataByEmail,
+  getUserDataByUsername,
+} from "../hooks/hooks";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "../firebase/firebase";
+import EditProfileModal from "../components/EditProfileModal";
 
 function Profile() {
   const [searchParams] = useSearchParams();
   const username = searchParams.get("username");
 
-  const navigate = useNavigate();
-  const { currentUser, userLoggedIn } = useAuth();
+  const { currentUser } = useAuth();
   const [posts, setPosts] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [userData, setUserData] = useState(null);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        let user;
-        if (username) {
-          user = await getUserDataByUsername(username);
-        } else {
-          user = await getUserDataByEmail(currentUser.email);
-        }
-        setUserData(user);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+  const fetchUserData = async () => {
+    try {
+      let user;
+      if (username) {
+        user = await getUserDataByUsername(username);
+      } else {
+        user = await getUserDataByEmail(currentUser.email);
       }
-    };
-    fetchUserData();
-
-    setPosts([
-      {
-        userName: "mohue",
-        postContent: null,
-        postDescription: "Post description",
-        userPfp: currentUser?.photoURL,
-        image:
-          "https://hard-drive.net/wp-content/uploads/2023/03/unleashed-daytime.jpg.webp",
-      },
-      {
-        userName: "mohue",
-        postContent: null,
-        postDescription: "Post description",
-        userPfp: currentUser?.photoURL,
-      },
-      {
-        userName: "mohue",
-        postContent: null,
-        postDescription: "Post description",
-        userPfp: currentUser?.photoURL,
-        image: "https://i.redd.it/qnj736563m151.jpg",
-      },
-      {
-        userName: "mohue",
-        postContent: null,
-        postDescription: "Post description",
-        userPfp: currentUser?.photoURL,
-        image: "https://www.godisageek.com/wp-content/uploads/SMG2-001.jpg",
-      },
-      {
-        userName: "mohue",
-        postContent: null,
-        postDescription: "Post description",
-        userPfp: currentUser?.photoURL,
-        image: "https://i.ytimg.com/vi/RRuBCBMLuQI/maxresdefault.jpg",
-      },
-      {
-        userName: "mohue",
-        postContent: null,
-        postDescription: "Post description",
-        userPfp: currentUser?.photoURL,
-      },
-    ]);
-  }, []);
+      setUserData(user);
+      const postsData = await getPostsByUsername(user.username);
+      for (const post of postsData) {
+        if (post.imageId) {
+          const imageRef = ref(storage, `images/${post.imageId}`);
+          post.imageUrl = await getDownloadURL(imageRef);
+        }
+      }
+      setPosts(postsData);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   useEffect(() => {
-    console.log(userData);
-  }, [userData]);
+    fetchUserData();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
@@ -106,16 +71,17 @@ function Profile() {
             <div className="flex items-center space-x-4">
               <div className="flex flex-col">
                 <h2 className="text-2xl font-bold">{userData?.username}</h2>
-                <p className="text-gray-400">{"User bio goes here."}</p>
-                <button className="mt-4 bg-purple-500 px-4 py-2 rounded-lg">
-                  Edit Profile
-                </button>
+                {currentUser?.email === userData?.email && (
+                  <button onClick={() => setOpenModal(true)} className="mt-4 bg-purple-500 px-4 py-2 rounded-lg">
+                    Edit Profile
+                  </button>
+                )}
               </div>
             </div>
 
             {/* Following and Followers Section */}
             <div className="mt-4 flex space-x-8 mr-8">
-              <div className="text-center">
+              {/* <div className="text-center">
                 <p className="font-semibold text-lg">
                   {currentUser.following?.length || 0}
                 </p>
@@ -126,7 +92,7 @@ function Profile() {
                   {currentUser.followers?.length || 0}
                 </p>
                 <p className="text-gray-400">Followers</p>
-              </div>
+              </div> */}
             </div>
           </div>
         )}
@@ -141,7 +107,7 @@ function Profile() {
             container
             spacing={2}
           >
-            {posts.map((post, index) => (
+            {posts?.map((post, index) => (
               <Grid2
                 item
                 xs={4}
@@ -154,11 +120,11 @@ function Profile() {
                   className={"bg-gray-800 rounded-lg"}
                 >
                   <div className="flex items-center justify-center w-full h-72 bg-gray-400 rounded-lg overflow-hidden my-4 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out">
-                    {post.image ? (
+                    {post?.imageUrl ? (
                       <img
-                        src={post.image}
+                        src={post.imageUrl}
                         alt="Uploaded"
-                        className="w-full h-full object-fill"
+                        className="object-fill"
                       />
                     ) : (
                       <img
@@ -176,6 +142,12 @@ function Profile() {
             ))}
           </Grid2>
         </div>
+        <EditProfileModal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          email={currentUser?.email}
+          refetch={fetchUserData}
+        />
       </main>
     </div>
   );
