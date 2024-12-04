@@ -1,14 +1,12 @@
-import db, { storage } from "../firebase/firebase";
-import CreatePostModal from "../components/CreatePostModal";
-import Sidebar from "../components/Sidebar";
-import TopRightSection from "../components/TopRightSection";
+import db, { storage } from "../firebase/firebase.js";
+import CreatePostModal from "../components/CreatePostModal.js";
+import Sidebar from "../components/Sidebar.js";
+import TopRightSection from "../components/TopRightSection.js";
 import React, { useEffect, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome for icons
 import "../App.css"; // Ensure global styles are included
-import { useAuth } from "../contexts/authContext";
 import { useNavigate } from "react-router-dom";
-import Post from "../components/Post";
-import AxiosInstance from "../components/Axios";
+import Post from "../components/Post.js";
 import {
   collection,
   doc,
@@ -18,9 +16,9 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { useAuth } from "../contexts/authContext";
+import { useAuth } from "../contexts/authContext/index.js";
 import { getDownloadURL, ref } from "firebase/storage";
-import { getUserDataByEmail } from "../hooks/hooks";
+import { getUserDataByEmail } from "../hooks/hooks.js";
 
 function Home() {
   const navigate = useNavigate();

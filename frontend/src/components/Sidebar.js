@@ -9,7 +9,7 @@ function Sidebar({ activePage }) {
   const [activeMenu, setActiveMenu] = useState(activePage);
 
   const onSignOut = (e) => {
-    console.log("Button clicked")
+    console.log("div clicked")
     setActiveMenu("logout");
     e.preventDefault();
     if (userLoggedIn) {
@@ -33,7 +33,7 @@ function Sidebar({ activePage }) {
 
       {/* Navigation */}
       <nav className="flex flex-col space-y-6">
-        <button
+        <div
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "home"
               ? "bg-gray-700 text-purple-500"
@@ -46,9 +46,9 @@ function Sidebar({ activePage }) {
           aria-label="Home"
         >
           <i className="fas fa-home text-2xl transition-transform duration-300 transform hover:scale-125"></i>
-        </button>
+        </div>
 
-        <button
+        <div
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "explore"
               ? "bg-gray-700 text-purple-500"
@@ -58,9 +58,9 @@ function Sidebar({ activePage }) {
           aria-label="Search"
         >
           <i className="fas fa-search text-2xl transition-transform duration-300 transform hover:scale-125"></i>
-        </button>
+        </div>
 
-        <button
+        <div
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "lounge"
               ? "bg-gray-700 text-purple-500"
@@ -73,9 +73,9 @@ function Sidebar({ activePage }) {
           aria-label="Lounges"
         >
           <i className="fas fa-couch text-2xl transition-transform duration-300 transform hover:scale-125"></i>
-        </button>
+        </div>
 
-        <button
+        <div
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "friends"
               ? "bg-gray-700 text-purple-500"
@@ -85,9 +85,9 @@ function Sidebar({ activePage }) {
           aria-label="Friends"
         >
           <i className="fas fa-user-friends text-2xl transition-transform duration-300 transform hover:scale-125"></i>
-        </button>
+        </div>
 
-        <button
+        <div
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "history"
               ? "bg-gray-700 text-purple-500"
@@ -100,11 +100,11 @@ function Sidebar({ activePage }) {
           aria-label="History"
         >
           <i className="fas fa-clock text-2xl transition-transform duration-300 transform hover:scale-125"></i>
-        </button>
+        </div>
 
         <hr className="border-gray-600 my-4 w-full" />
 
-        <button
+        <div
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "settings"
               ? "bg-gray-700 text-purple-500"
@@ -116,9 +116,9 @@ function Sidebar({ activePage }) {
           aria-label="Settings"
         >
           <i className="fas fa-cog text-2xl transition-transform duration-300 transform hover:scale-125"></i>
-        </button>
+        </div>
 
-        <button
+        <div
           className={`p-3 mt-auto rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "logout"
               ? "bg-gray-700 text-purple-500"
@@ -128,7 +128,7 @@ function Sidebar({ activePage }) {
           aria-label="Logout"
         >
           <i className="fas fa-sign-out-alt text-2xl transition-transform duration-300 transform hover:scale-125"></i>
-        </button>
+        </div>
       </nav>
     </aside>
   );

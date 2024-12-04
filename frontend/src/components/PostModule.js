@@ -4,12 +4,12 @@ import { doc,
   arrayUnion,
   getDoc,
   collection } from "firebase/firestore";
-import db from "../firebase/firebase";
+import db from "../firebase/firebase.js";
 import { IconButton, 
   Typography } from "@mui/material";
 import React from "react";
-import { useAuth } from '../contexts/authContext';
-import { getUserDataByEmail } from '../hooks/hooks';
+import { useAuth } from '../contexts/authContext/index.js';
+import { getUserDataByEmail } from '../hooks/hooks.js';
 
 
 

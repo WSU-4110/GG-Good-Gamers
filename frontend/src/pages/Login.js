@@ -8,9 +8,8 @@ import {
   doCreateUserWithEmailAndPassword,
   doSignInWithEmailAndPassword,
   doSignInWithGoogle,
-} from "../firebase/auth";
-import AxiosInstance from "../components/Axios";
-import db from "../firebase/firebase";
+} from "../firebase/auth.js";
+import db from "../firebase/firebase.js";
 import { addDoc, collection } from "firebase/firestore";
 
 function Login() {

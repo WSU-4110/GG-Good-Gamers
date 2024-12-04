@@ -4,11 +4,10 @@ import TopRightSection from "../components/TopRightSection.js";
 import React, { useEffect, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome for icons
 import "../App.css"; // Ensure global styles are included
-import { useAuth } from "../contexts/authContext";
+import { useAuth } from "../contexts/authContext/index.js";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Post from "../components/Post";
-import AxiosInstance from "../components/Axios";
 import { Box, Grid, Grid2, Paper, Stack, Typography } from "@mui/material";
+import { getUserDataByEmail, getUserDataByUsername } from "../hooks/hooks.js";
 
 function Profile() {
   const [searchParams] = useSearchParams();
