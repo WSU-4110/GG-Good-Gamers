@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './pages/Login';
-import Home from './pages/Home';
-import Lounge from './pages/Lounge';
-import Messages from './pages/Messages'; 
+import Login from './pages/Login.js';
+import Home from './pages/Home.js';
+import Lounge from './pages/Lounge.js';
+import Messages from './pages/Messages.js'; 
 import './App.css';
-import History from "./pages/History";
+import History from "./pages/History.js";
 import "./App.css"; // Global styles
-import { AuthProvider, useAuth } from "./contexts/authContext";
-import Profile from './pages/Profile';
+import { AuthProvider, useAuth } from "./contexts/authContext/index.js";
+import Profile from './pages/Profile.js';
 
 function App() {
   return (

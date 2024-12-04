@@ -1,5 +1,5 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
-import db from "../firebase/firebase";
+import db from "../firebase/firebase.js";
 
 export const getUserDataByEmail = async (email) => {
   const usersCollection = collection(db, "users");

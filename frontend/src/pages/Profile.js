@@ -1,20 +1,16 @@
-import CreatePostModal from "../components/CreatePostModal";
-import Sidebar from "../components/Sidebar";
-import TopRightSection from "../components/TopRightSection";
+import Sidebar from "../components/Sidebar.js";
 import React, { useEffect, useState } from "react";
+import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome for icons
+import "../App.css"; // Ensure global styles are included
+import { useAuth } from "../contexts/authContext/index.js";
+import { useSearchParams } from "react-router-dom";
+import { getUserDataByEmail, getUserDataByUsername, getPostsByUsername } from "../hooks/hooks.js";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../App.css";
-import { useAuth } from "../contexts/authContext";
-import { useSearchParams } from "react-router-dom";
 import { Grid2, Stack } from "@mui/material";
-import {
-  getPostsByUsername,
-  getUserDataByEmail,
-  getUserDataByUsername,
-} from "../hooks/hooks";
 import { getDownloadURL, ref } from "firebase/storage";
-import { storage } from "../firebase/firebase";
-import EditProfileModal from "../components/EditProfileModal";
+import { storage } from "../firebase/firebase.js";
+import EditProfileModal from "../components/EditProfileModal.js";
 
 function Profile() {
   const [searchParams] = useSearchParams();

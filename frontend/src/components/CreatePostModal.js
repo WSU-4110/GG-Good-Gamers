@@ -18,8 +18,8 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import db from "../firebase/firebase";
-import { storage } from "../firebase/firebase";
+import db from "../firebase/firebase.js";
+import { storage } from "../firebase/firebase.js";
 import { ref, uploadBytes } from "firebase/storage"
 import { v4 } from 'uuid';
 
