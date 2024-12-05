@@ -1,13 +1,12 @@
-import db, { storage } from "../firebase/firebase";
-import CreatePostModal from "../components/CreatePostModal";
-import Sidebar from "../components/Sidebar";
-import TopRightSection from "../components/TopRightSection";
+import db, { storage } from "../firebase/firebase.js";
+import CreatePostModal from "../components/CreatePostModal.js";
+import Sidebar from "../components/Sidebar.js";
+import TopRightSection from "../components/TopRightSection.js";
 import React, { useEffect, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome for icons
 import "../App.css"; // Ensure global styles are included
 import { useNavigate } from "react-router-dom";
-import Post from "../components/Post";
-import AxiosInstance from "../components/Axios";
+import Post from "../components/Post.js";
 import {
   collection,
   doc,
@@ -17,9 +16,9 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { useAuth } from "../contexts/authContext";
+import { useAuth } from "../contexts/authContext/index.js";
 import { getDownloadURL, ref } from "firebase/storage";
-import { getUserDataByEmail } from "../hooks/hooks";
+import { getUserDataByEmail } from "../hooks/hooks.js";
 
 function Home() {
   const navigate = useNavigate();
@@ -47,6 +46,7 @@ function Home() {
       const postsWithUsers = await Promise.all(
         snapshot.docs.map(async (docSnapshot) => {
           let postData = docSnapshot.data();
+          postData.id = docSnapshot.id;
 
           if (postData.userRef) {
             try {
@@ -59,13 +59,14 @@ function Home() {
             }
           }
 
-          if (postData.imageId) {
+          if (postData.mediaId) {
             try {
-              const imageRef = ref(storage, `images/${postData.imageId}`);
-              postData.imageUrl = await getDownloadURL(imageRef);
+              const fileRef = ref(storage, `images/${postData.mediaId}`);
+              const fileUrl = await getDownloadURL(fileRef);
+              postData.mediaUrl = fileUrl;
             } catch (error) {
-              console.error("Error fetching image URL:", error);
-            }         
+              console.error("Error fetching media URL:", error);
+            }
           }
 
           return postData;
@@ -76,10 +77,8 @@ function Home() {
   }, [refetchPosts]);
 
   useEffect(() => {
-    console.log(posts)
-    console.log(posts.forEach(post => post.imageUrl))
-
-  }, [posts])
+    console.log(posts);
+  }, [posts]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
@@ -94,9 +93,12 @@ function Home() {
               <Post
                 key={index}
                 name={post?.user?.username && post.user.username}
-                image={post?.imageUrl}
+                mediaUrl={post?.mediaUrl}
+                mediaType={post?.mediaType}
+                comments={post?.comments}
                 text={post?.text}
                 profilePicture={post?.user?.pfpURL && post?.user?.pfpURL}
+                postId={post?.id}
               />
             </>
           ))}
@@ -105,62 +107,7 @@ function Home() {
       {/* Right Sidebar */}
       <aside className="w-1/4 bg-gray-900 p-4 min-h-screen space-y-8">
         {/* Top-right section */}
-        <TopRightSection
-          setOpenModal={setOpenModal}
-          currentUser={user}
-        />
-
-        {/* Suggested for You */}
-        <div className="bg-gray-800 p-6 rounded-lg mt-8">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold">Suggested for You</h2>
-            <i className="fas fa-ellipsis-h text-gray-400"></i>
-          </div>
-          <div className="space-y-4">
-            {["Faraz Tariq", "Tina Tzoo", "MKBHD"].map((name) => (
-              <div
-                key={name}
-                className="flex justify-between items-center bg-gray-700 p-2 rounded-lg"
-              >
-                <div className="flex items-center space-x-2">
-                  <img
-                    src="https://via.placeholder.com/40"
-                    alt={name}
-                    className="rounded-full"
-                  />
-                  <div>
-                    <p className="font-bold">{name}</p>
-                    <p className="text-gray-400 text-sm">Super Active</p>
-                  </div>
-                </div>
-                <button className="bg-purple-500 px-3 py-1 rounded-lg">
-                  Follow
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Live Chat */}
-        <div className="bg-gray-800 p-6 rounded-lg">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold">Live Chat</h2>
-            <button className="bg-gray-700 px-2 py-1 rounded-lg">
-              Add Group
-            </button>
-          </div>
-          <div className="space-y-4">
-            {["BigDaddy", "NoobPlayer69"].map((user) => (
-              <div
-                key={user}
-                className="flex justify-between items-center bg-gray-700 p-2 rounded-lg"
-              >
-                <div>{user}</div>
-                <div>2h ago</div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <TopRightSection setOpenModal={setOpenModal} currentUser={user} />
       </aside>
 
       {/* Create Post Modal */}

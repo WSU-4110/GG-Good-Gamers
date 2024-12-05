@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/authContext';
-import { doSignOut } from '../firebase/auth';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/authContext/index.js";
+import { doSignOut } from "../firebase/auth.js";
 
 function Sidebar({ activePage }) {
   const navigate = useNavigate();
@@ -9,16 +9,18 @@ function Sidebar({ activePage }) {
   const [activeMenu, setActiveMenu] = useState(activePage);
 
   const onSignOut = (e) => {
-    setActiveMenu('logout');
+    console.log("div clicked");
+    setActiveMenu("logout");
     e.preventDefault();
     if (userLoggedIn) {
       doSignOut();
     }
+    navigate("/");
   };
 
   useEffect(() => {
     if (!userLoggedIn) {
-      navigate('/');
+      navigate("/");
     }
   }, [userLoggedIn, currentUser, navigate]);
 
@@ -32,75 +34,108 @@ function Sidebar({ activePage }) {
       {/* Navigation */}
       <nav className="flex flex-col space-y-6">
         <div
+          data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
-            activeMenu === 'home' ? 'bg-gray-700 text-purple-500' : 'text-gray-400'
+            activeMenu === "home"
+              ? "bg-gray-700 text-purple-500"
+              : "text-gray-400"
           }`}
           onClick={() => {
-            setActiveMenu('home');
-            navigate('/home');
+            setActiveMenu("home");
+            navigate("/home");
           }}
+          aria-label="Home"
         >
           <i className="fas fa-home text-2xl transition-transform duration-300 transform hover:scale-125"></i>
         </div>
 
-        <div
+        {/* <div
+          data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
-            activeMenu === 'explore' ? 'bg-gray-700 text-purple-500' : 'text-gray-400'
+            activeMenu === "explore"
+              ? "bg-gray-700 text-purple-500"
+              : "text-gray-400"
           }`}
-          onClick={() => setActiveMenu('explore')}
+          onClick={() => setActiveMenu("explore")}
+          aria-label="Search"
         >
           <i className="fas fa-search text-2xl transition-transform duration-300 transform hover:scale-125"></i>
-        </div>
+        </div> */}
 
         <div
+          data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
-            activeMenu === 'lounge' ? 'bg-gray-700 text-purple-500' : 'text-gray-400'
+            activeMenu === "lounge"
+              ? "bg-gray-700 text-purple-500"
+              : "text-gray-400"
           }`}
           onClick={() => {
-            setActiveMenu('lounge');
-            navigate('/lounge'); // Navigate to the Lounge page
+            setActiveMenu("lounge");
+            navigate("/lounge"); // Navigate to the Lounge page
           }}
+          aria-label="Lounges"
         >
           <i className="fas fa-couch text-2xl transition-transform duration-300 transform hover:scale-125"></i>
         </div>
 
         <div
+          data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
-            activeMenu === 'friends' ? 'bg-gray-700 text-purple-500' : 'text-gray-400'
+            activeMenu === "friends"
+              ? "bg-gray-700 text-purple-500"
+              : "text-gray-400"
           }`}
-          onClick={() => setActiveMenu('friends')}
+          onClick={() => {
+            setActiveMenu("friends")
+            navigate('/messages')}}
+          aria-label="Friends"
         >
           <i className="fas fa-user-friends text-2xl transition-transform duration-300 transform hover:scale-125"></i>
         </div>
 
-        <div
+        {/* <div
+          data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
-            activeMenu === 'history' ? 'bg-gray-700 text-purple-500' : 'text-gray-400'
+            activeMenu === "history"
+              ? "bg-gray-700 text-purple-500"
+              : "text-gray-400"
           }`}
           onClick={() => {
-            setActiveMenu('history');
-            navigate('/history');
+            setActiveMenu("history");
+            navigate("/history");
           }}
+          aria-label="History"
         >
           <i className="fas fa-clock text-2xl transition-transform duration-300 transform hover:scale-125"></i>
-        </div>
+        </div> */}
 
         <hr className="border-gray-600 my-4 w-full" />
 
-        <div
+        {/* <div
+          data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
-            activeMenu === 'settings' ? 'bg-gray-700 text-purple-500' : 'text-gray-400'
+            activeMenu === "settings"
+              ? "bg-gray-700 text-purple-500"
+              : "text-gray-400"
           }`}
-          onClick={() => setActiveMenu('settings')}
+          onClick={() => {
+            setActiveMenu("settings");
+            navigate("/history");
+          }}
+          aria-label="Settings"
         >
           <i className="fas fa-cog text-2xl transition-transform duration-300 transform hover:scale-125"></i>
-        </div>
+        </div> */}
 
         <div
+          data-testid="button"
           className={`p-3 mt-auto rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
-            activeMenu === 'logout' ? 'bg-gray-700 text-purple-500' : 'text-gray-400'
+            activeMenu === "logout"
+              ? "bg-gray-700 text-purple-500"
+              : "text-gray-400"
           }`}
           onClick={onSignOut}
+          aria-label="Logout"
         >
           <i className="fas fa-sign-out-alt text-2xl transition-transform duration-300 transform hover:scale-125"></i>
         </div>

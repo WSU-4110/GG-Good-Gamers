@@ -1,90 +1,59 @@
-import CreatePostModal from "../components/CreatePostModal";
-import Sidebar from "../components/Sidebar";
-import TopRightSection from "../components/TopRightSection";
+import Sidebar from "../components/Sidebar.js";
 import React, { useEffect, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome for icons
 import "../App.css"; // Ensure global styles are included
-import { useAuth } from "../contexts/authContext";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import Post from "../components/Post";
-import AxiosInstance from "../components/Axios";
-import { Box, Grid, Grid2, Paper, Stack, Typography } from "@mui/material";
-import { getUserDataByEmail, getUserDataByUsername } from "../hooks/hooks";
+import { useAuth } from "../contexts/authContext/index.js";
+import { useSearchParams } from "react-router-dom";
+import {
+  getUserDataByEmail,
+  getUserDataByUsername,
+  getPostsByUsername,
+} from "../hooks/hooks.js";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "../App.css";
+import { Card, CardMedia, Grid2, Stack } from "@mui/material";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "../firebase/firebase.js";
+import EditProfileModal from "../components/EditProfileModal.js";
 
 function Profile() {
   const [searchParams] = useSearchParams();
   const username = searchParams.get("username");
 
-  const navigate = useNavigate();
-  const { currentUser, userLoggedIn } = useAuth();
+  const { currentUser } = useAuth();
   const [posts, setPosts] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [userData, setUserData] = useState(null);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        let user;
-        if (username) {
-          user = await getUserDataByUsername(username);
-        } else {
-          user = await getUserDataByEmail(currentUser.email);
-        }
-        setUserData(user);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+  const fetchUserData = async () => {
+    try {
+      let user;
+      if (username) {
+        user = await getUserDataByUsername(username);
+      } else {
+        user = await getUserDataByEmail(currentUser.email);
       }
-    };
-    fetchUserData();
-
-    setPosts([
-      {
-        userName: "mohue",
-        postContent: null,
-        postDescription: "Post description",
-        userPfp: currentUser?.photoURL,
-        image:
-          "https://hard-drive.net/wp-content/uploads/2023/03/unleashed-daytime.jpg.webp",
-      },
-      {
-        userName: "mohue",
-        postContent: null,
-        postDescription: "Post description",
-        userPfp: currentUser?.photoURL,
-      },
-      {
-        userName: "mohue",
-        postContent: null,
-        postDescription: "Post description",
-        userPfp: currentUser?.photoURL,
-        image: "https://i.redd.it/qnj736563m151.jpg",
-      },
-      {
-        userName: "mohue",
-        postContent: null,
-        postDescription: "Post description",
-        userPfp: currentUser?.photoURL,
-        image: "https://www.godisageek.com/wp-content/uploads/SMG2-001.jpg",
-      },
-      {
-        userName: "mohue",
-        postContent: null,
-        postDescription: "Post description",
-        userPfp: currentUser?.photoURL,
-        image: "https://i.ytimg.com/vi/RRuBCBMLuQI/maxresdefault.jpg",
-      },
-      {
-        userName: "mohue",
-        postContent: null,
-        postDescription: "Post description",
-        userPfp: currentUser?.photoURL,
-      },
-    ]);
-  }, []);
+      setUserData(user);
+      const postsData = await getPostsByUsername(user.username);
+      for (const post of postsData) {
+        if (post.mediaId) {
+          const imageRef = ref(storage, `images/${post.mediaId}`);
+          post.mediaUrl = await getDownloadURL(imageRef);
+        }
+      }
+      setPosts(postsData);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   useEffect(() => {
-    console.log(userData);
-  }, [userData]);
+    console.log(posts);
+  }, [posts]);
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
@@ -106,16 +75,20 @@ function Profile() {
             <div className="flex items-center space-x-4">
               <div className="flex flex-col">
                 <h2 className="text-2xl font-bold">{userData?.username}</h2>
-                <p className="text-gray-400">{"User bio goes here."}</p>
-                <button className="mt-4 bg-purple-500 px-4 py-2 rounded-lg">
-                  Edit Profile
-                </button>
+                {currentUser?.email === userData?.email && (
+                  <button
+                    onClick={() => setOpenModal(true)}
+                    className="mt-4 bg-purple-500 px-4 py-2 rounded-lg"
+                  >
+                    Edit Profile
+                  </button>
+                )}
               </div>
             </div>
 
             {/* Following and Followers Section */}
             <div className="mt-4 flex space-x-8 mr-8">
-              <div className="text-center">
+              {/* <div className="text-center">
                 <p className="font-semibold text-lg">
                   {currentUser.following?.length || 0}
                 </p>
@@ -126,14 +99,29 @@ function Profile() {
                   {currentUser.followers?.length || 0}
                 </p>
                 <p className="text-gray-400">Followers</p>
-              </div>
+              </div> */}
             </div>
           </div>
         )}
 
         {/* User's Posts */}
         <div>
-          <h2 className="text-xl font-bold my-12">My Posts</h2>
+          <h2 className="text-xl font-bold my-8">My Posts</h2>
+          {posts.length === 0 && (
+            <div className="flex flex-col items-center justify-center">
+              <p className="text-s italic text-gray-400 my-12">
+                Nothing posted here...
+              </p>
+              <img
+                src={
+                  "https://bluemoji.io/cdn-proxy/646218c67da47160c64a84d5/66b3e807ccde70cabd68b603_65.png"
+                }
+                alt="Uploaded"
+                className="object-contain"
+                width={"10%"}
+              />
+            </div>
+          )}
           <Grid2
             mx={"12rem"}
             justifyContent={"center"}
@@ -141,7 +129,7 @@ function Profile() {
             container
             spacing={2}
           >
-            {posts.map((post, index) => (
+            {posts?.map((post, index) => (
               <Grid2
                 item
                 xs={4}
@@ -153,22 +141,64 @@ function Profile() {
                   height={"100%"}
                   className={"bg-gray-800 rounded-lg"}
                 >
-                  <div className="flex items-center justify-center w-full h-72 bg-gray-400 rounded-lg overflow-hidden my-4 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out">
-                    {post.image ? (
-                      <img
-                        src={post.image}
-                        alt="Uploaded"
-                        className="w-full h-full object-fill"
-                      />
+                  <div className="flex items-center justify-center w-full h-72 bg-gray-700 rounded-lg overflow-hidden my-4 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out">
+                    {post?.mediaUrl ? (
+                      <>
+                        {post?.mediaType === "image" && (
+                          <Card
+                            sx={{
+                              width: "100%",
+                              height: 400,
+                              backgroundColor: "black",
+                              borderRadius: 2,
+                              overflow: "hidden",
+                              my: 2,
+                            }}
+                          >
+                            <CardMedia
+                              component="img"
+                              image={post?.mediaUrl}
+                              alt="Uploaded"
+                              sx={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "contain",
+                              }}
+                            />
+                          </Card>
+                        )}
+
+                        {post?.mediaType === "video" && (
+                          <Card
+                            sx={{
+                              width: "100%",
+                              height: 400,
+                              backgroundColor: "black",
+                              borderRadius: 2,
+                              overflow: "hidden",
+                              my: 2,
+                            }}
+                          >
+                            <CardMedia
+                              component="video"
+                              src={post?.mediaUrl}
+                              muted
+                              controls
+                              sx={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "contain",
+                              }}
+                            />
+                          </Card>
+                        )}
+                      </>
                     ) : (
-                      <img
-                        src={
-                          "https://static-00.iconduck.com/assets.00/messages-2-icon-512x512-7jyh5yz9.png"
-                        }
-                        alt="Uploaded"
-                        className="object-contain"
-                        width={"30%"}
-                      />
+                      <p className="text-s italic text-gray-200 my-4">
+                        {post.text.length > 100
+                          ? `${post.text.slice(0, 100)}...` // Truncate to 100 characters
+                          : post.text}
+                      </p>
                     )}
                   </div>
                 </Stack>
@@ -176,6 +206,12 @@ function Profile() {
             ))}
           </Grid2>
         </div>
+        <EditProfileModal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          email={currentUser?.email}
+          refetch={fetchUserData}
+        />
       </main>
     </div>
   );

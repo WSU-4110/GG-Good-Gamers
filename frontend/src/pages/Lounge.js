@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import Sidebar from '../components/Sidebar';
-import TopRightSection from '../components/TopRightSection';
-import { useAuth } from '../contexts/authContext';
+import Sidebar from '../components/Sidebar.js';
+import TopRightSection from '../components/TopRightSection.js';
+import { useAuth } from '../contexts/authContext/index.js';
 import { IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { doSignOut } from "../firebase/auth";
+import { doSignOut } from "../firebase/auth.js";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export default function Lsidebar({ UGI }) {
