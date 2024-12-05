@@ -86,7 +86,7 @@ export default function Post({
             sx={{
               width: "100%",
               height: 400,
-              backgroundColor: "gray",
+              backgroundColor: "black",
               borderRadius: 2,
               overflow: "hidden",
               my: 2,
@@ -106,7 +106,7 @@ export default function Post({
             sx={{
               width: "100%",
               height: 400,
-              backgroundColor: "gray",
+              backgroundColor: "black",
               borderRadius: 2,
               overflow: "hidden",
               my: 2,
