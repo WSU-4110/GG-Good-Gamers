@@ -9,6 +9,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import ChatIcon from "@mui/icons-material/Chat";
 import StarIcon from "@mui/icons-material/Star";
+import { useAuth } from "../contexts/authContext/index.js";
 const initialMessages = conversations.conversations;
 
 const individualContacts = Object.keys(
@@ -37,6 +38,7 @@ const groupChats = Object.keys(conversations.conversations.group).map(
 const contacts = [...individualContacts, ...groupChats];
 
 const Messages = () => {
+  const {currentUser} = useAuth();
   const [activeMenu, setActiveMenu] = useState("messages");
   const [selectedContact, setSelectedContact] = useState(contacts[0]);
   const [messages, setMessages] = useState(
@@ -116,7 +118,7 @@ const Messages = () => {
       <div className="ml-24 flex-1 flex flex-col">
         {/* TopRightSection */}
         <div className="flex justify-end p-4">
-          <TopRightSection setOpenModal={() => {}} />
+          <TopRightSection currentUser={currentUser} setOpenModal={() => {}} />
         </div>
 
         {/* Messages Content */}

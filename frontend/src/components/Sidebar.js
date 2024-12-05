@@ -49,7 +49,7 @@ function Sidebar({ activePage }) {
           <i className="fas fa-home text-2xl transition-transform duration-300 transform hover:scale-125"></i>
         </div>
 
-        <div
+        {/* <div
           data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "explore"
@@ -60,7 +60,7 @@ function Sidebar({ activePage }) {
           aria-label="Search"
         >
           <i className="fas fa-search text-2xl transition-transform duration-300 transform hover:scale-125"></i>
-        </div>
+        </div> */}
 
         <div
           data-testid="button"
@@ -85,13 +85,15 @@ function Sidebar({ activePage }) {
               ? "bg-gray-700 text-purple-500"
               : "text-gray-400"
           }`}
-          onClick={() => setActiveMenu("friends")}
+          onClick={() => {
+            setActiveMenu("friends")
+            navigate('/messages')}}
           aria-label="Friends"
         >
           <i className="fas fa-user-friends text-2xl transition-transform duration-300 transform hover:scale-125"></i>
         </div>
 
-        <div
+        {/* <div
           data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "history"
@@ -105,11 +107,11 @@ function Sidebar({ activePage }) {
           aria-label="History"
         >
           <i className="fas fa-clock text-2xl transition-transform duration-300 transform hover:scale-125"></i>
-        </div>
+        </div> */}
 
         <hr className="border-gray-600 my-4 w-full" />
 
-        <div
+        {/* <div
           data-testid="button"
           className={`p-3 rounded-lg cursor-pointer flex justify-center items-center hover:bg-gray-700 transition-all ${
             activeMenu === "settings"
@@ -123,7 +125,7 @@ function Sidebar({ activePage }) {
           aria-label="Settings"
         >
           <i className="fas fa-cog text-2xl transition-transform duration-300 transform hover:scale-125"></i>
-        </div>
+        </div> */}
 
         <div
           data-testid="button"
@@ -132,7 +134,7 @@ function Sidebar({ activePage }) {
               ? "bg-gray-700 text-purple-500"
               : "text-gray-400"
           }`}
-          onClick={() => navigate("/")}
+          onClick={onSignOut}
           aria-label="Logout"
         >
           <i className="fas fa-sign-out-alt text-2xl transition-transform duration-300 transform hover:scale-125"></i>

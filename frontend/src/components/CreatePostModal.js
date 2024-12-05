@@ -6,59 +6,71 @@ import {
   TextField,
   IconButton,
   Typography,
+  CardMedia,
+  Card,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   addDoc,
   collection,
   doc,
-  getDoc,
   getDocs,
   query,
-  setDoc,
   where,
 } from "firebase/firestore";
 import db from "../firebase/firebase.js";
 import { storage } from "../firebase/firebase.js";
-import { ref, uploadBytes } from "firebase/storage"
-import { v4 } from 'uuid';
+import { ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
 
 const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
   const [newPostText, setNewPostText] = useState("");
   const [newPostImage, setNewPostImage] = useState(null);
+  const [postUploading, setPostUploading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
 
-  const uploadImage = (imageUuid) => {
+  const uploadImage = (mediaUuid) => {
     if (imageFile == null) return;
-    const imageRef = ref(storage, `images/${imageUuid}`);
-    uploadBytes(imageRef, imageFile).then(() => {
-      alert("Image Uploaded")
-    })
-  }
+    const imageRef = ref(storage, `images/${mediaUuid}`);
 
-  const onCreatePost = async (imageUuid) => {
-    // const docRef = doc(db, "posts", id);
-    // const payload = {
-    //   userRef: `user/${'mohue'}`,
-    //   text: newPostText
-    // }
-    // await setDoc(docRef, payload);
+    setPostUploading(true); // Start spinner
+    return uploadBytes(imageRef, imageFile)
+      .then(() => {
+        alert("Image Uploaded");
+      })
+      .catch((error) => {
+        alert("Error uploading image:", error);
+      });
+  };
 
-    const usersCollection = collection(db, "users"); //user db
-    const userQuery = query(usersCollection, where("email", "==", email)); //asks
-    const querySnapshot = await getDocs(userQuery); //returns array of all user info
-    const userDoc = querySnapshot.docs[0];  //pulls first user by email
+  const onCreatePost = async (mediaUuid) => {
+    let fileType;
+    let mediaType = 'text'
+    if (imageFile) {
+      fileType = imageFile.type;
+      mediaType = fileType.startsWith("image/") ? "image" : "video";
+    };
+
+
+    const usersCollection = collection(db, "users");
+    const userQuery = query(usersCollection, where("email", "==", email));
+    const querySnapshot = await getDocs(userQuery);
+    const userDoc = querySnapshot.docs[0];
 
     const collectionRef = collection(db, "posts");
     const userRef = doc(db, "users", userDoc.id);
-    const payload = { 
+    const payload = {
       userRef: userRef,
       text: newPostText,
       createdAt: new Date(),
-      imageId: imageUuid,
+      mediaId: mediaType !== 'text' ? mediaUuid : null,
+      mediaType,
       likeCount: 0,
-      comments:[],
+      comments: [],
     };
+
     await addDoc(collectionRef, payload);
   };
 
@@ -70,18 +82,29 @@ const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
     }
   };
 
-  const handleCreatePost = () => {
-    const imageUuid = v4();
-    uploadImage(imageUuid);
-    onCreatePost(imageUuid);
-    setNewPostText("");
-    setNewPostImage(null);
-    onClose();
-    setRefetchPosts(refetchPosts => !refetchPosts)
+  const handleCreatePost = async () => {
+    const mediaUuid = v4();
+    try {
+      await uploadImage(mediaUuid);
+      await onCreatePost(mediaUuid);
+      setNewPostText("");
+      setNewPostImage(null);
+      setRefetchPosts((refetchPosts) => !refetchPosts);
+      onClose();
+    } catch (error) {
+      console.error("Error creating post:", error);
+    } finally {
+      setPostUploading(false); // Stop spinner
+    }
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal
+      open={open}
+      onClose={() => {
+        if (!postUploading) onClose();
+      }}
+    >
       <Box
         sx={{
           position: "absolute",
@@ -97,6 +120,17 @@ const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
           color: "#f5f5f5",
         }}
       >
+        <Backdrop
+          sx={{
+            borderRadius: "12px",
+            color: "#fff",
+            zIndex: (theme) => theme.zIndex.modal + 1,
+          }}
+          open={postUploading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+
         {/* Header */}
         <div
           style={{
@@ -127,7 +161,7 @@ const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
             bgcolor: "#333",
             borderRadius: "8px",
             input: {
-              color: "#f5f5f5", // Change text color to white
+              color: "#f5f5f5",
             },
             "& .MuiOutlinedInput-root": {
               "& fieldset": { borderColor: "#555" },
@@ -146,38 +180,35 @@ const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
             mt: 2,
           }}
         >
-          {/* Upload Image Button */}
           <Button
             variant="contained"
             component="label"
             sx={{
-              backgroundColor: "#8a2be2", // Purple color
+              backgroundColor: "#8a2be2",
               color: "#f5f5f5",
               borderRadius: "20px",
               py: 1.2,
               px: 3,
-              "&:hover": {
-                backgroundColor: "#7326b1", // Darker purple on hover
-              },
+              "&:hover": { backgroundColor: "#7326b1" },
             }}
           >
-            Upload Image
+            Upload File
             <input type="file" hidden onChange={handleImageChange} />
           </Button>
 
-          {/* Post Button */}
           <Button
             variant="contained"
             onClick={handleCreatePost}
+            disabled={postUploading}
             sx={{
-              backgroundColor: "#8a2be2", // Purple color
+              backgroundColor: postUploading ? "#555" : "#8a2be2",
               color: "#fff",
               borderRadius: "20px",
               py: 1.2,
               px: 4,
               fontWeight: "bold",
               "&:hover": {
-                backgroundColor: "#7326b1", // Darker purple on hover
+                backgroundColor: postUploading ? "#555" : "#7326b1",
               },
             }}
           >
@@ -196,15 +227,26 @@ const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
               textAlign: "center",
             }}
           >
-            <img
-              src={newPostImage}
-              alt="Preview"
-              style={{
-                borderRadius: "8px",
-                maxWidth: "100%",
-                maxHeight: "200px",
+            <Card
+              sx={{
+                width: "100%",
+                height: 400,
+                backgroundColor: "black",
+                borderRadius: 2,
+                overflow: "hidden",
+                my: 2,
               }}
-            />
+            >
+              <CardMedia
+                component={
+                  imageFile.type.startsWith("image/") ? "img" : "video"
+                }
+                image={newPostImage}
+                controls={!imageFile.type.startsWith("image/")}
+                alt="Uploaded"
+                sx={{ width: "100%", height: "100%", objectFit: "contain" }}
+              />
+            </Card>
           </Box>
         )}
       </Box>
