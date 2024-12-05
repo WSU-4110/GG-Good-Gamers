@@ -59,13 +59,14 @@ function Home() {
             }
           }
 
-          if (postData.imageId) {
+          if (postData.mediaId) {
             try {
-              const imageRef = ref(storage, `images/${postData.imageId}`);
-              postData.imageUrl = await getDownloadURL(imageRef);
+              const fileRef = ref(storage, `images/${postData.mediaId}`);
+              const fileUrl = await getDownloadURL(fileRef);
+              postData.mediaUrl = fileUrl;
             } catch (error) {
-              console.error("Error fetching image URL:", error);
-            }         
+              console.error("Error fetching media URL:", error);
+            }
           }
 
           return postData;
@@ -75,7 +76,10 @@ function Home() {
     });
   }, [refetchPosts]);
 
+  useEffect(() => {
+    console.log(posts)
 
+  }, [posts])
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
@@ -90,7 +94,8 @@ function Home() {
               <Post
                 key={index}
                 name={post?.user?.username && post.user.username}
-                image={post?.imageUrl}
+                mediaUrl={post?.mediaUrl}
+                mediaType={post?.mediaType}
                 comments = {post?.comments}
                 text={post?.text}
                 profilePicture={post?.user?.pfpURL && post?.user?.pfpURL}

@@ -6,6 +6,8 @@ import {
   TextField,
   IconButton,
   Typography,
+  CardMedia,
+  Card,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -20,44 +22,52 @@ import {
 } from "firebase/firestore";
 import db from "../firebase/firebase.js";
 import { storage } from "../firebase/firebase.js";
-import { ref, uploadBytes } from "firebase/storage"
-import { v4 } from 'uuid';
+import { ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
 
 const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
   const [newPostText, setNewPostText] = useState("");
   const [newPostImage, setNewPostImage] = useState(null);
+  const [postUploading, setPostUploading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
 
-  const uploadImage = (imageUuid) => {
+  const uploadImage = (mediaUuid) => {
     if (imageFile == null) return;
-    const imageRef = ref(storage, `images/${imageUuid}`);
-    uploadBytes(imageRef, imageFile).then(() => {
-      alert("Image Uploaded")
-    })
-  }
+    const imageRef = ref(storage, `images/${mediaUuid}`);
 
-  const onCreatePost = async (imageUuid) => {
-    // const docRef = doc(db, "posts", id);
-    // const payload = {
-    //   userRef: `user/${'mohue'}`,
-    //   text: newPostText
-    // }
-    // await setDoc(docRef, payload);
+    setPostUploading(true);
+    uploadBytes(imageRef, imageFile)
+      .then(() => {
+        alert("Image Uploaded");
+        setPostUploading(false);
+      })
+      .catch((error) => {
+        alert("Error uploading image:", error);
+        setPostUploading(false);
+      });
+  };
+
+  const onCreatePost = async (mediaUuid) => {
+    if (!imageFile) return;
+
+    const fileType = imageFile.type;
+    const mediaType = fileType.startsWith("image/") ? "image" : "video";
 
     const usersCollection = collection(db, "users"); //user db
     const userQuery = query(usersCollection, where("email", "==", email)); //asks
     const querySnapshot = await getDocs(userQuery); //returns array of all user info
-    const userDoc = querySnapshot.docs[0];  //pulls first user by email
+    const userDoc = querySnapshot.docs[0]; //pulls first user by email
 
     const collectionRef = collection(db, "posts");
     const userRef = doc(db, "users", userDoc.id);
-    const payload = { 
+    const payload = {
       userRef: userRef,
       text: newPostText,
       createdAt: new Date(),
-      imageId: imageUuid,
+      mediaId: mediaUuid,
+      mediaType,
       likeCount: 0,
-      comments:[],
+      comments: [],
     };
     await addDoc(collectionRef, payload);
   };
@@ -71,13 +81,13 @@ const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
   };
 
   const handleCreatePost = () => {
-    const imageUuid = v4();
-    uploadImage(imageUuid);
-    onCreatePost(imageUuid);
+    const mediaUuid = v4();
+    uploadImage(mediaUuid);
+    onCreatePost(mediaUuid);
     setNewPostText("");
     setNewPostImage(null);
     onClose();
-    setRefetchPosts(refetchPosts => !refetchPosts)
+    setRefetchPosts((refetchPosts) => !refetchPosts);
   };
 
   return (
@@ -196,15 +206,43 @@ const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
               textAlign: "center",
             }}
           >
-            <img
-              src={newPostImage}
-              alt="Preview"
-              style={{
-                borderRadius: "8px",
-                maxWidth: "100%",
-                maxHeight: "200px",
-              }}
-            />
+            {imageFile.type.startsWith("image/") ? (
+              <Card
+                sx={{
+                  width: "100%",
+                  height: 400,
+                  backgroundColor: "gray",
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  my: 2,
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  image={newPostImage}
+                  alt="Uploaded"
+                  sx={{ width: "100%", height: "100%", objectFit: "contain" }}
+                />
+              </Card>
+            ) : (
+              <Card
+                sx={{
+                  width: "100%",
+                  height: 400,
+                  backgroundColor: "gray",
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  my: 2,
+                }}
+              >
+                <CardMedia
+                  component="video"
+                  src={newPostImage}
+                  controls
+                  sx={{ width: "100%", height: "100%", objectFit: "contain" }}
+                />
+              </Card>
+            )}
           </Box>
         )}
       </Box>
