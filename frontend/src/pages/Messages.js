@@ -9,7 +9,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import  db  from "../firebase/firebase";
+import db from "../firebase/firebase";
 import Sidebar from "../components/Sidebar";
 import TopRightSection from "../components/TopRightSection";
 import { IconButton, TextField, Avatar, Badge } from "@mui/material";
@@ -19,14 +19,32 @@ import SearchIcon from "@mui/icons-material/Search";
 const Messages = () => {
   const auth = getAuth();
   const currentUser = auth.currentUser;
-  const currentUserId = currentUser?.uid;
+  const [currentUsername, setCurrentUsername] = useState(null);
 
-  const [users, setUsers] = useState([]); // List of all users
+  const [users, setUsers] = useState([]);
   const [selectedContact, setSelectedContact] = useState(null); // Selected user for the conversation
   const [messages, setMessages] = useState([]); // Messages for the selected conversation
   const [newMessage, setNewMessage] = useState(""); // New message input
   const [searchQuery, setSearchQuery] = useState(""); // Search input
   const [searchResults, setSearchResults] = useState([]); // Filtered users
+
+  // Fetch the current user's username from Firestore
+  useEffect(() => {
+    const fetchUsername = async () => {
+      if (currentUser) {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("email", "==", currentUser.email)); // Assuming email is unique
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          const user = snapshot.docs[0]?.data();
+          if (user) {
+            setCurrentUsername(user.username);
+          }
+        });
+        return unsubscribe;
+      }
+    };
+    fetchUsername();
+  }, [currentUser]);
 
   // Fetch users from Firestore
   useEffect(() => {
@@ -35,22 +53,22 @@ const Messages = () => {
       const unsubscribe = onSnapshot(usersRef, (snapshot) => {
         const fetchedUsers = snapshot.docs
           .map((doc) => ({ id: doc.id, ...doc.data() }))
-          .filter((user) => user.id !== currentUserId); // Exclude current user
+          .filter((user) => user.username !== currentUsername); // Exclude current user by username
         setUsers(fetchedUsers);
       });
       return unsubscribe;
     };
     fetchUsers();
-  }, [currentUserId]);
+  }, [currentUsername]);
 
   // Fetch messages for the selected contact
   useEffect(() => {
-    if (currentUserId && selectedContact) {
+    if (currentUsername && selectedContact) {
       const messagesRef = collection(db, "Messages");
       const q = query(
         messagesRef,
-        where("sendingUser", "in", [currentUserId, selectedContact.id]),
-        where("receivingUser", "in", [currentUserId, selectedContact.id]),
+        where("sendingUser", "in", [currentUsername, selectedContact.username]),
+        where("receivingUser", "in", [currentUsername, selectedContact.username]),
         orderBy("timestamp", "asc")
       );
 
@@ -61,7 +79,7 @@ const Messages = () => {
 
       return unsubscribe;
     }
-  }, [currentUserId, selectedContact]);
+  }, [currentUsername, selectedContact]);
 
   // Handle sending a message
   const handleSendMessage = async () => {
@@ -69,8 +87,8 @@ const Messages = () => {
       try {
         await addDoc(collection(db, "Messages"), {
           message: newMessage,
-          sendingUser: currentUserId,
-          receivingUser: selectedContact.id,
+          sendingUser: currentUsername,
+          receivingUser: selectedContact.username,
           timestamp: serverTimestamp(),
         });
         setNewMessage("");
@@ -138,7 +156,7 @@ const Messages = () => {
                   onClick={() => setSelectedContact(user)}
                 >
                   <Badge
-                    overlap="circle"
+                    overlap="circular"
                     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                     color="success"
                     variant="dot"
@@ -171,14 +189,12 @@ const Messages = () => {
                     <div
                       key={index}
                       className={`flex flex-col mb-4 ${
-                        msg.sendingUser === currentUserId
-                          ? "items-end"
-                          : "items-start"
+                        msg.sendingUser === currentUsername ? "items-end" : "items-start"
                       }`}
                     >
                       <div
                         className={`max-w-xs p-3 rounded-lg ${
-                          msg.sendingUser === currentUserId
+                          msg.sendingUser === currentUsername
                             ? "bg-indigo-500 text-white"
                             : "bg-gray-600 text-gray-200"
                         }`}
