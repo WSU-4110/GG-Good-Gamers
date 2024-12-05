@@ -7,6 +7,7 @@ import {
   addDoc,
   serverTimestamp,
   orderBy,
+  or,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import db from "../firebase/firebase.js";
@@ -31,8 +32,10 @@ import {
   ListItemAvatar,
   ListItemText,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Messages = () => {
+  const navigate = useNavigate();
   const auth = getAuth();
   const currentUser = auth.currentUser;
   const [currentUsername, setCurrentUsername] = useState(null);
@@ -152,18 +155,31 @@ const Messages = () => {
   useEffect(() => {
     if (currentUsername) {
       const messagesRef = collection(db, "Messages");
-      const q = query(messagesRef, where("sendingUser", "==", currentUsername));
+
+      // Query for messages where the user is either the sender or receiver
+      const q = query(
+        messagesRef,
+        or(
+          where("sendingUser", "==", currentUsername),
+          where("receivingUser", "==", currentUsername)
+        )
+      );
+
       const unsubscribe = onSnapshot(q, (snapshot) => {
-        const fetchedContacts = [];
+        const fetchedContacts = new Set(); // Use a Set to avoid duplicates
         snapshot.docs.forEach((doc) => {
           const data = doc.data();
-          if (!fetchedContacts.includes(data.receivingUser)) {
-            fetchedContacts.push(data.receivingUser);
+          if (data.sendingUser === currentUsername) {
+            fetchedContacts.add(data.receivingUser); // Add receiver if the user is the sender
+          } else if (data.receivingUser === currentUsername) {
+            fetchedContacts.add(data.sendingUser); // Add sender if the user is the receiver
           }
         });
-        setContacts(fetchedContacts);
-        setFilteredContacts(fetchedContacts); // Default filtered is the same as contacts
+        const contactsArray = Array.from(fetchedContacts); // Convert Set to Array
+        setContacts(contactsArray);
+        setFilteredContacts(contactsArray); // Default filtered is the same as contacts
       });
+
       return unsubscribe;
     }
   }, [currentUsername]);
@@ -360,7 +376,13 @@ const Messages = () => {
                       onClick={() => setSelectedContact(contact)}
                     >
                       <div className="flex items-center space-x-3">
-                        <Avatar src="https://via.placeholder.com/40" />
+                        <Avatar
+                          src={
+                            contactsData.filter(
+                              (data) => data.username === contact
+                            )[0]?.pfpURL
+                          }
+                        />
                         <span className="text-left">{contact}</span>
                       </div>
                       <IconButton
@@ -430,7 +452,7 @@ const Messages = () => {
                       )[0].pfpURL
                     }
                   />
-                  <h2 className="text-xl font-bold">{selectedContact}</h2>
+                  <h2 onClick={() => navigate(`/profile?username=${selectedContact}`)} className="cursor-pointer text-xl font-bold">{selectedContact}</h2>
                   {/* <IconButton
     onClick={handleMenuOpen}
     aria-label="more options"

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { IconButton } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/authContext/index.js';
-import { getUserDataByEmail } from '../hooks/hooks.js';
+import React, { useEffect, useState } from "react";
+import { IconButton } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/authContext/index.js";
+import { getUserDataByEmail } from "../hooks/hooks.js";
 
 function TopRightSection({ setOpenModal }) {
   const navigate = useNavigate();
@@ -21,10 +21,10 @@ function TopRightSection({ setOpenModal }) {
 
   useEffect(() => {
     fetchUserData();
-  }, [])
+  }, []);
 
   const handleMessagesClick = () => {
-    navigate('/messages');
+    navigate("/messages");
   };
 
   return (
@@ -33,23 +33,31 @@ function TopRightSection({ setOpenModal }) {
       <i className="fas fa-bell text-3xl text-gray-400 hover:text-white cursor-pointer shake"></i> */}
 
       {/* Message Icon */}
-      <IconButton onClick={handleMessagesClick} sx={{ color: 'rgb(156, 163, 175)' }}>
+      <IconButton
+        onClick={handleMessagesClick}
+        sx={{ color: "rgb(156, 163, 175)" }}
+      >
         <i className="fas fa-comments"></i>
       </IconButton>
 
       {/* + Button for creating a post */}
-      <IconButton onClick={() => setOpenModal(true)} sx={{ color: 'rgb(156, 163, 175)' }}>
-        <AddIcon fontSize="large" />
-      </IconButton>
+      {setOpenModal && (
+        <IconButton
+          onClick={() => setOpenModal(true)}
+          sx={{ color: "rgb(156, 163, 175)" }}
+        >
+          <AddIcon fontSize="large" />
+        </IconButton>
+      )}
 
       {/* User Profile */}
       {user ? (
         <img
-          src={user?.pfpURL || 'https://via.placeholder.com/40'}
+          src={user?.pfpURL || "https://via.placeholder.com/40"}
           alt="User Profile"
           className="rounded-full cursor-pointer"
           width="40px"
-          onClick={() => navigate('/profile')}
+          onClick={() => navigate("/profile")}
         />
       ) : (
         <div>...</div>

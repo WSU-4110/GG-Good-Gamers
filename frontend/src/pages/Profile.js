@@ -41,7 +41,7 @@ function Profile() {
           post.mediaUrl = await getDownloadURL(imageRef);
         }
       }
-      setPosts(postsData);
+      setPosts(postsData.sort((a, b) => b.createdAt - a.createdAt));
     } catch (error) {
       console.error("Error fetching user data:", error);
     }

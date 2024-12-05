@@ -34,7 +34,14 @@ function Login() {
     e.preventDefault();
     if (!isSigningIn) {
       setIsSigningIn(true);
-      await doSignInWithEmailAndPassword(email, password);
+      try {
+        await doSignInWithEmailAndPassword(email, password);
+      } catch (err) {
+        console.error("Error signing in:", err.message);
+        alert("Error signing in: " + err.message);
+      } finally {
+        setIsSigningIn(false);
+      }
     }
   };
 
@@ -42,9 +49,14 @@ function Login() {
     e.preventDefault();
     if (!isSigningIn) {
       setIsSigningIn(true);
-      doSignInWithGoogle().catch((err) => {
+      try {
+        await doSignInWithGoogle();
+      } catch (err) {
+        console.error("Error signing in with Google:", err.message);
+        alert("Error signing in with Google: " + err.message);
+      } finally {
         setIsSigningIn(false);
-      });
+      }
     }
   };
 
@@ -52,19 +64,26 @@ function Login() {
     e.preventDefault();
     if (!isRegistering) {
       setIsRegistering(true);
-      await doCreateUserWithEmailAndPassword(email, password);
-    }
+      try {
+        await doCreateUserWithEmailAndPassword(email, password);
 
-    const collectionRef = collection(db, "users");
-    const payload = {
-      email: email,
-      username: username,
-      dateOfBirth: new Date(dobYear, dobMonth - 1, dobDay),
-      dateCreated: new Date(),
-      gender: gender,
-    };
-    console.log(payload);
-    await addDoc(collectionRef, payload);
+        const collectionRef = collection(db, "users");
+        const payload = {
+          email: email.toLowerCase(),
+          username: username.toLowerCase(),
+          dateOfBirth: new Date(dobYear, dobMonth - 1, dobDay),
+          dateCreated: new Date(),
+          gender: gender,
+        };
+        console.log(payload);
+        await addDoc(collectionRef, payload);
+      } catch (err) {
+        console.error("Error signing up:", err.message);
+        alert("Error signing up: " + err.message);
+      } finally {
+        setIsRegistering(false);
+      }
+    }
   };
 
   useEffect(() => {
@@ -148,11 +167,11 @@ function Login() {
             </div>
 
             {/* Forgot Password */}
-            <div className="mb-6 text-right">
+            {/* <div className="mb-6 text-right">
               <a href="/#" className="text-purple-500 hover:underline">
                 Forgot Password?
               </a>
-            </div>
+            </div> */}
 
             {/* Login Button */}
             <div className="mb-2">
@@ -163,8 +182,8 @@ function Login() {
                 Login
               </button>
             </div>
-            <p className="text-gray-400">or</p>
-            <div className="mb-6">
+            {/* <p className="text-gray-400">or</p> */}
+            {/* <div className="mb-6">
               <Button
                 variant="contained"
                 sx={{
@@ -176,9 +195,9 @@ function Login() {
                 onClick={onGoogleSignin}
               >
                 <i className="fa-brands fa-google"></i> {/* Password Icon */}
-                <p className="ml-4">Login with Google</p>
-              </Button>
-            </div>
+                {/* <p className="ml-4">Login with Google</p> */}
+              {/* </Button> */}
+            {/* </div> */}
           </>
         ) : (
           <>
@@ -320,11 +339,11 @@ function Login() {
           </>
         )}
         {/* Contact Us */}
-        <div className="text-center">
+        {/* <div className="text-center">
           <a href="/#" className="text-gray-400 hover:underline">
             Contact Us
           </a>
-        </div>
+        </div> */}
       </div>
     </div>
   );
