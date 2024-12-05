@@ -44,3 +44,9 @@ button {
 }
 
 
+.max-w-xs {
+  max-width: 75%; /* Limit the width of the bubble to 75% of the container */
+  word-wrap: break-word; /* Break long words */
+  word-break: break-word; /* Ensure words break properly */
+  overflow-wrap: break-word; /* Ensure wrapping works in all browsers */
+}
