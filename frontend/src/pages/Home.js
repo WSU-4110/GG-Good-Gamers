@@ -77,9 +77,8 @@ function Home() {
   }, [refetchPosts]);
 
   useEffect(() => {
-    console.log(posts)
-
-  }, [posts])
+    console.log(posts);
+  }, [posts]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
@@ -96,7 +95,7 @@ function Home() {
                 name={post?.user?.username && post.user.username}
                 mediaUrl={post?.mediaUrl}
                 mediaType={post?.mediaType}
-                comments = {post?.comments}
+                comments={post?.comments}
                 text={post?.text}
                 profilePicture={post?.user?.pfpURL && post?.user?.pfpURL}
                 postId={post?.id}
@@ -108,62 +107,7 @@ function Home() {
       {/* Right Sidebar */}
       <aside className="w-1/4 bg-gray-900 p-4 min-h-screen space-y-8">
         {/* Top-right section */}
-        <TopRightSection
-          setOpenModal={setOpenModal}
-          currentUser={user}
-        />
-
-        {/* Suggested for You */}
-        <div className="bg-gray-800 p-6 rounded-lg mt-8">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold">Suggested for You</h2>
-            <i className="fas fa-ellipsis-h text-gray-400"></i>
-          </div>
-          <div className="space-y-4">
-            {["Faraz Tariq", "Tina Tzoo", "MKBHD"].map((name) => (
-              <div
-                key={name}
-                className="flex justify-between items-center bg-gray-700 p-2 rounded-lg"
-              >
-                <div className="flex items-center space-x-2">
-                  <img
-                    src="https://via.placeholder.com/40"
-                    alt={name}
-                    className="rounded-full"
-                  />
-                  <div>
-                    <p className="font-bold">{name}</p>
-                    <p className="text-gray-400 text-sm">Super Active</p>
-                  </div>
-                </div>
-                <button className="bg-purple-500 px-3 py-1 rounded-lg">
-                  Follow
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Live Chat */}
-        <div className="bg-gray-800 p-6 rounded-lg">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold">Live Chat</h2>
-            <button className="bg-gray-700 px-2 py-1 rounded-lg">
-              Add Group
-            </button>
-          </div>
-          <div className="space-y-4">
-            {["BigDaddy", "NoobPlayer69"].map((user) => (
-              <div
-                key={user}
-                className="flex justify-between items-center bg-gray-700 p-2 rounded-lg"
-              >
-                <div>{user}</div>
-                <div>2h ago</div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <TopRightSection setOpenModal={setOpenModal} currentUser={user} />
       </aside>
 
       {/* Create Post Modal */}
