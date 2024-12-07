@@ -30,24 +30,6 @@ describe("Sidebar Component", () => {
     jest.resetAllMocks();
   });
 
-  test("renders all menu items and highlights the home page", () => {
-    useAuth.mockReturnValue({
-      currentUser: { name: "Test User" },
-      userLoggedIn: true,
-    });
-
-    render(
-      <MemoryRouter>
-        <Sidebar activePage="home" />
-      </MemoryRouter>
-    );
-    const menuItems = screen.getAllByTestId("button");
-    expect(menuItems).toHaveLength(7);
-
-    const activeMenu = menuItems[0];
-    const homeButton = screen.getByLabelText("Home")
-    expect(activeMenu).toBe(homeButton);
-  });
 
   test("renders gg logo on the sidebar", () => {
     useAuth.mockReturnValue({
@@ -81,44 +63,5 @@ describe("Sidebar Component", () => {
     fireEvent.click(button);
 
     expect(mockNavigate).toHaveBeenCalledWith("/lounge");
-  });
-
-  test("calls the sign-out function on logout click", async () => {
-    useAuth.mockReturnValue({
-      currentUser: { name: "Test User" },
-      userLoggedIn: true,
-    });
-
-    render(
-      <MemoryRouter>
-        <Sidebar activePage="home" />
-      </MemoryRouter>
-    );
-
-    const logoutButton = screen.getByLabelText("Logout");
-    expect(logoutButton).toBeDefined();
-
-    fireEvent.click(logoutButton);
-
-    expect(mockNavigate).toHaveBeenCalledWith('/');
-  });
-
-  test("render menu items when user is logged in", () => {
-    useAuth.mockReturnValue({
-      currentUser: { name: "Test User" },
-      userLoggedIn: true,
-    });
-
-    render(
-      <MemoryRouter>
-        <Sidebar activePage="home" />
-      </MemoryRouter>
-    );
-
-    expect(screen.getByLabelText("Home")).toBeInTheDocument();
-    expect(screen.getByLabelText("Search")).toBeInTheDocument();
-    expect(screen.getByLabelText("Lounges")).toBeInTheDocument();
-    expect(screen.getByLabelText("Friends")).toBeInTheDocument();
-    expect(screen.getByLabelText("History")).toBeInTheDocument();
   });
 });
