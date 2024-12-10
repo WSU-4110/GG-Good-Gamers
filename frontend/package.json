@@ -21,8 +21,8 @@
     "react-player": "^2.16.0",
     "react-router-dom": "^6.26.2",
     "react-scripts": "5.0.1",
-    "stream": "^0.0.3",
-    "text-encoding": "^0.7.0",
+    "react-swipeable": "^7.0.2",
+    "react-swipeable-views": "^0.14.0",
     "uuid": "^11.0.3",
     "web-vitals": "^2.1.4"
   },

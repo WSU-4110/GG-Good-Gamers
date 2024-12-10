@@ -38,21 +38,20 @@ const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
     setPostUploading(true); // Start spinner
     return uploadBytes(imageRef, imageFile)
       .then(() => {
-        alert("Image Uploaded");
+        alert("File Uploaded");
       })
       .catch((error) => {
-        alert("Error uploading image:", error);
+        alert("Error uploading file:", error);
       });
   };
 
   const onCreatePost = async (mediaUuid) => {
     let fileType;
-    let mediaType = 'text'
+    let mediaType = "text";
     if (imageFile) {
       fileType = imageFile.type;
       mediaType = fileType.startsWith("image/") ? "image" : "video";
-    };
-
+    }
 
     const usersCollection = collection(db, "users");
     const userQuery = query(usersCollection, where("email", "==", email));
@@ -65,7 +64,7 @@ const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
       userRef: userRef,
       text: newPostText,
       createdAt: new Date(),
-      mediaId: mediaType !== 'text' ? mediaUuid : null,
+      mediaId: mediaType !== "text" ? mediaUuid : null,
       mediaType,
       likeCount: 0,
       comments: [],
@@ -86,7 +85,13 @@ const CreatePostModal = ({ open, onClose, email, setRefetchPosts }) => {
     const mediaUuid = v4();
     try {
       await uploadImage(mediaUuid);
-      await onCreatePost(mediaUuid);
+      await onCreatePost(mediaUuid)
+        .then(() => {
+          alert("Post Uploaded");
+        })
+        .catch((error) => {
+          alert("Error uploading post:", error);
+        });
       setNewPostText("");
       setNewPostImage(null);
       setRefetchPosts((refetchPosts) => !refetchPosts);
