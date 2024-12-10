@@ -20,6 +20,7 @@ function Lounge() {
   const [user, setUser] = useState();
   const [communities, setCommunities] = useState([]);
   const [activeCommunity, setActiveCommunity] = useState(null);
+  const [activeCommunityNum, setActiveCommunityNum] = useState(0);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
@@ -47,19 +48,20 @@ function Lounge() {
           ...doc.data(),
         }));
         setCommunities(communityData.sort((a, b) => a.order - b.order));
-        if (communityData.length) setActiveCommunity(communityData[0]);
+        if (communityData.length && !activeCommunity) setActiveCommunity(communityData[activeCommunityNum]);
       } catch (error) {
         console.error("Error fetching communities: ", error);
       }
     };
 
     fetchCommunities();
-  }, []);
+  }, [newMessage]);
 
   // Fetch messages of the active community
   useEffect(() => {
     if (activeCommunity) {
       setMessages(activeCommunity.messages || []);
+      setActiveCommunityNum(activeCommunity.order || 0);
     }
   }, [activeCommunity]);
 
